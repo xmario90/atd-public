@@ -12,5 +12,5 @@
       eos_config:
         - backup: yes
           backup_options:
-            filename: {{inventory_hostname}}-bgp-base.cfg
+            filename: "{{ inventory_hostname }}-bgp-base.cfg"
             dir_path: /configs
