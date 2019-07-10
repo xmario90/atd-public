@@ -1,14 +1,14 @@
-eos1 ansible_host=192.168.0.10
-eos3 ansible_host=192.168.0.12
-eos4 ansible_host=192.168.0.13
-eos5 ansible_host=192.168.0.14
-eos6 ansible_host=192.168.0.15
-eos7 ansible_host=192.168.0.16
-eos8 ansible_host=192.168.0.17
-eos9 ansible_host=192.168.0.18
-eos11 ansible_host=192.168.0.20
-eos12 ansible_host=192.168.0.21
-eos13 ansible_host=192.168.0.22
+eos
+eos3
+eos4
+eos5
+eos6
+eos7
+eos8
+eos9
+eos11
+eos12
+eos13
 
 [bgp]
 eos1
