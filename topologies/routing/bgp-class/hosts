@@ -1,0 +1,20 @@
+eos1 ansible_host=192.168.0.10
+eos3 ansible_host=192.168.0.12
+eos4 ansible_host=192.168.0.13
+eos5 ansible_host=192.168.0.14
+eos6 ansible_host=192.168.0.15
+eos7 ansible_host=192.168.0.16
+eos8 ansible_host=192.168.0.17
+eos9 ansible_host=192.168.0.18
+eos11 ansible_host=192.168.0.20
+eos12 ansible_host=192.168.0.21
+eos13 ansible_host=192.168.0.22
+
+[bgp]
+eos1
+eos3
+eos[4:9]
+eos[11:13]
+
+[arista:children]
+bgp

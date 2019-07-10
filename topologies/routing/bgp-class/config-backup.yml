@@ -1,0 +1,16 @@
+---
+
+- name: Backup the EOS device configuration
+  hosts: bgp
+  gather_facts: no
+
+  tasks:
+    - name: Gather Facts
+      eos_facts:
+
+    - name: Backup configuration
+      eos_config:
+        - backup: yes
+          backup_options:
+            filename: {{inventory_hostname}}-bgp-base.cfg
+            dir_path: /configs
