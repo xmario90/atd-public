@@ -8,9 +8,8 @@
     - name: Gather Facts
       eos_facts:
 
-    - name: Backup configuration
+    - name: Backup Configs
       eos_config:
-        - backup: yes
-          backup_options:
-            filename: "{{ inventory_hostname }}-bgp-base.cfg"
-            dir_path: /configs
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}-bgp-base.cfg"
