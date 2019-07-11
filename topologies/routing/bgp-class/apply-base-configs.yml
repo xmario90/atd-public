@@ -1,0 +1,15 @@
+---
+
+- name: Apply Base Configs for BGP Class
+  hosts: bgp
+  gather_facts: no
+
+  tasks:
+    - name: Gather Facts
+      eos_facts:
+
+    - name: Apply Base Configs
+      eos_config:
+        src: "./backup/{{ inventory_hostname }}-bgp-base.cfg"
+        replace: config
+
