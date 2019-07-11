@@ -12,4 +12,5 @@
       eos_config:
         src: "./backup/{{ inventory_hostname }}-bgp-base.cfg"
         replace: config
+        save_when: always
 
