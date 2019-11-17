@@ -1,7 +1,7 @@
 ---
 
 - name: Apply Base Configs for EVPN ATD
-  hosts: evpn
+  hosts: multicast
   gather_facts: no
 
   tasks:
@@ -10,7 +10,7 @@
 
     - name: Apply Base Configs
       eos_config:
-        src: "./backup/{{ inventory_hostname }}-evpn-base.cfg"
+        src: "./backup/{{ inventory_hostname }}-multicast-base.cfg"
         replace: config
         save_when: always
 
