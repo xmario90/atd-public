@@ -1,0 +1,44 @@
+!!!!!!!!!!EOS6!!!!!!!!!!
+no ip pim ssm range standard
+no ip pim rp-address 78.78.78.78
+!
+interface Eth1-5
+no ip pim sparse-mode
+!
+interface Vlan14
+no ip pim sparse-mode
+!
+!
+!!!!!!!!!!EOS1!!!!!!!!!!
+no ip pim ssm range standard
+no ip pim rp-address 78.78.78.78
+!
+interface Eth1-5
+no ip pim sparse-mode
+!
+interface Vlan17
+no ip pim sparse-mode
+!
+!
+!!!!!!!!!!EOS4!!!!!!!!!!
+no ip pim ssm range standard
+no ip pim rp-address 78.78.78.78
+!
+interface Eth2-5
+no ip pim sparse-mode
+!
+interface Vlan9,Vlan16
+no ip pim sparse-mode
+!
+!
+!!!!!!!!!!EOS7!!!!!!!!!!
+no ip pim anycast-rp 78.78.78.78 7.7.7.7
+no ip pim anycast-rp 78.78.78.78 8.8.8.8
+!
+!
+!!!!!!!!!!EOS8!!!!!!!!!!
+no ip pim anycast-rp 78.78.78.78 7.7.7.7
+no ip pim anycast-rp 78.78.78.78 8.8.8.8
+!
+!
+!
