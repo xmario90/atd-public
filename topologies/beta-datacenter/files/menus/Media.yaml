@@ -34,6 +34,8 @@ labconfiglets:
       - "BaseIPv4_Host1"
     host2:
       - "BaseIPv4_Host2"
+    cvx01:
+      - "BaseIPv4_Cvx01"
   media-reset:
     spine1:
       - "BaseIPv4_Spine1"
@@ -59,6 +61,8 @@ labconfiglets:
     host2:
       - "BaseIPv4_Host2"
       - "Host2-Media"
+    cvx01:
+      - "BaseIPv4_Cvx01"
   media-intro:
     spine1:
       - "BaseIPv4_Spine1"
@@ -84,6 +88,8 @@ labconfiglets:
     host2:
       - "BaseIPv4_Host2"
       - "Host2-Media"
+    cvx01:
+      - "BaseIPv4_Cvx01"      
   media-vlan:
     spine1:
       - "BaseIPv4_Spine1"
@@ -109,6 +115,8 @@ labconfiglets:
     host2:
       - "BaseIPv4_Host2"
       - "Host2-Media"
+    cvx01:
+    - "BaseIPv4_Cvx01"  
   media-ospf:
     spine1:
       - "BaseIPv4_Spine1"
@@ -134,6 +142,8 @@ labconfiglets:
     host2:
       - "BaseIPv4_Host2"
       - "Host2-Media"
+    cvx01:
+      - "BaseIPv4_Cvx01"  
   media-bgp:
     spine1:
       - "BaseIPv4_Spine1"
@@ -159,6 +169,8 @@ labconfiglets:
     host2:
       - "BaseIPv4_Host2"
       - "Host2-Media"
+    cvx01:
+      - "BaseIPv4_Cvx01"  
   media-mcast:
     spine1:
       - "BaseIPv4_Spine1"
@@ -184,3 +196,5 @@ labconfiglets:
     host2:
       - "BaseIPv4_Host2"
       - "Host2-Media"
+    cvx01:
+      - "BaseIPv4_Cvx01"  

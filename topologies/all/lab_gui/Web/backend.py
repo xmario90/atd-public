@@ -189,8 +189,10 @@ class BackEnd(tornado.websocket.WebSocketHandler):
                     pass
 
             if len(tasks_running) == 0:
-                # Execute additional commands if there are any for the lab
+                
                 self.send_to_socket("Tasks finished. Finalizing deployment for {0} - {1} lab...".format(selected_menu,selected_lab))
+
+                # Execute additional commands if there are any for the lab
                 for command in additional_commands:
                     os.system(command)
                 self.send_to_socket("Deployment for {0} - {1} lab is complete.".format(selected_menu,selected_lab))
