@@ -1,0 +1,95 @@
+{% block head %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<title>Arist ATD Lab Selection</title>
+{% endblock %}
+
+{% block navbar %}
+<div class="alert alert-info"><h1>Arista ATD Lab Selection</h1></div>
+{% endblock %}
+
+{% block content %}
+<h2 style="text-indent: 1em">Choose a lab: </h2>
+{% for menu_type in data %}
+<div style="text-indent: 2em">
+    <table>
+        <tr><h4> {{ menu_type }} </h4></tr>
+        <td><select id="{{menu_type}}LabSelection" name="{{menu_type}}LabSelection">
+            {% for menu_item in data[menu_type] %}
+            <option value={{menu_item}}> {{ menu_item }} </option>
+            {% endfor %}
+        </select></td>
+        <td><button id="{{menu_type}}SubmitButton">Execute {{ menu_type }} Lab</button></td>
+        {% endfor %}
+    </table>
+</div>
+<h3 style="text-indent: 1em">Last Executed Lab: </h3>
+<h4 id="lastExecuted" style="text-indent: 1em"></h4>
+<h3 style="text-indent: 1em">Execution Status: </h3>
+<h4 id="executionStatus" style="text-indent: 1em"></h4>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    // Set stage for incoming socket events
+    var url = ''
+    var ws = ''
+    $(document).ready(function() {
+
+        url = window.location.origin;
+        url = url.replace("http:","ws:");
+        url += "/receive/";
+
+        ws = new WebSocket(url);
+        ws.onopen = function() {
+            var requestData = {};
+            requestData.type = 'openMessage'
+            requestData.text = "opened";
+            ws.send(JSON.stringify(requestData));
+
+        }
+
+        ws.onmessage = function (msg) {
+            console.log(msg);
+            var data = JSON.parse(msg['data'])
+            if (data['type'] == 'serverData') {
+                $('#executionStatus').text(data['status']);
+
+            }
+            else if (data['type'] == 'keepalive') {
+                var requestData = {};
+                requestData.type = 'keepalive'
+                requestData.text = "pong";
+                ws.send(JSON.stringify(requestData));
+
+            }
+            else {
+                $('#executionStatus').val('failed');
+            }
+        };
+    });
+    // loop through menus to create button click functions
+    {% for menu_type in data %}
+    $('#{{menu_type}}SubmitButton').click(function() {
+        url = window.location.origin;
+        url = url.replace("http:","ws:");
+        url += "/receive/";
+
+        console.log(url);
+        var lab = document.getElementById("{{menu_type}}LabSelection");
+        var selectedLab = lab.options[lab.selectedIndex].text;
+        var requestData = {};
+        requestData.type = 'clientData';
+        requestData.selectedMenu = "{{ menu_type }}";
+        requestData.selectedLab = selectedLab;
+        requestData.url = url;
+        console.log(ws);
+        console.log(requestData);
+        ws.send(JSON.stringify(requestData));
+        
+    });      
+    {% endfor %}
+
+    
+</script>
+{% endblock %}
