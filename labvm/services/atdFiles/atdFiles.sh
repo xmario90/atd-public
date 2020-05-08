@@ -32,6 +32,10 @@ chown -R arista:arista /home/arista
 sed -i "s/{REPLACE_PWD}/$ARISTA_PWD/g" /tmp/atd/topologies/$TOPO/labguides/source/connecting.rst
 sed -i "s/{REPLACE_PWD}/$ARISTA_PWD/g" /tmp/atd/topologies/$TOPO/labguides/source/programmability_connecting.rst
 
+# Copy files for nginx and restart nginx
+cp /tmp/atd/labvm/services/nginx/default /etc/nginx/sites-enabled/default
+systemctl restart nginx
+
 # Build the lab guides html files
 cd /tmp/atd/topologies/$TOPO/labguides
 make html
