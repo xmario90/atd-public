@@ -136,8 +136,8 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         lab_file.close()
 
         additional_commands = []
-        if 'additional_commands' in lab_info[selected_lab]:
-            additional_commands = lab_info[selected_lab]['additional_commands']
+        if 'additional_commands' in lab_info['lab_list'][selected_lab]:
+            additional_commands = lab_info['lab_list'][selected_lab]['additional_commands']
 
         # Get access info for the topology
         f = open('/etc/ACCESS_INFO.yaml')
@@ -145,7 +145,7 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         f.close()
 
         # List of configlets
-        lab_configlets = lab_file['labconfiglets']
+        lab_configlets = lab_info['labconfiglets']
 
         # Send message that deployment is beginning
         self.send_to_socket("Starting deployment for {0} - {1} lab...".format(selected_menu,selected_lab))
