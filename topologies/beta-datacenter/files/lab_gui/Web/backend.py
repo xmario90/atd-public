@@ -184,7 +184,7 @@ class BackEnd(tornado.websocket.WebSocketHandler):
                 if cvp_clnt.getTaskStatus(task['workOrderId'])['taskStatus'] != 'Completed':
                     tasks_running.append(task)
                 elif cvp_clnt.getTaskStatus(task['workOrderId'])['taskStatus'] == 'Failed':
-                    print('Task {0} failed.'.format(task['workOrderId']))
+                    self.send_to_socket('Task {0} failed. Please check CVP for more information'.format(task['workOrderId']))
                 else:
                     pass
 
@@ -196,5 +196,5 @@ class BackEnd(tornado.websocket.WebSocketHandler):
                 self.send_to_socket("Deployment for {0} - {1} lab is complete.".format(selected_menu,selected_lab))
                 all_tasks_completed = True
             else:
-                pass
+                self.send_to_socket("{0}/{1} tasks completed. Please wait...".format(str(len(tasks_to_check) - len(tasks_running)), len(tasks_to_check)))
             

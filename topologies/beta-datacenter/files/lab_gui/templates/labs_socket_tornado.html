@@ -60,6 +60,7 @@
                 var requestData = {};
                 requestData.type = 'keepalive'
                 requestData.text = "pong";
+                console.log(requestData)
                 ws.send(JSON.stringify(requestData));
 
             }
