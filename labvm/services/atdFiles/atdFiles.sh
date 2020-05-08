@@ -26,6 +26,7 @@ chmod +x /usr/local/bin/ConfigureTopology.py
 
 # Add files to arista home
 rsync -av /tmp/atd/topologies/$TOPO/files/ /home/arista
+rsync -av /tmp/atd/topologies/all/lab_gui /home/arista
 
 # Update file permissions in /home/arista
 chown -R arista:arista /home/arista
