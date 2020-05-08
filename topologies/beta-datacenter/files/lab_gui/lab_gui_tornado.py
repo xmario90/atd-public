@@ -9,7 +9,7 @@ from Web.frontend import FrontEnd
 def create_app():
     return tornado.web.Application([
         (r"/labs/",FrontEnd),
-        (r"/receive/",BackEnd)])
+        (r"/backend/",BackEnd)])
 
 
 if __name__ == '__main__':
