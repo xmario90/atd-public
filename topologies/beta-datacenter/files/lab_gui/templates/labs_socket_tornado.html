@@ -38,7 +38,7 @@
 
         url = window.location.origin;
         url = url.replace("http:","ws:");
-        url += "/receive/";
+        url += "/backend/";
 
         ws = new WebSocket(url);
         ws.onopen = function() {
@@ -73,7 +73,7 @@
     $('#{{menu_type}}SubmitButton').click(function() {
         url = window.location.origin;
         url = url.replace("http:","ws:");
-        url += "/receive/";
+        url += "/backend/";
 
         console.log(url);
         var lab = document.getElementById("{{menu_type}}LabSelection");
