@@ -4,6 +4,7 @@ import sys
 import signal
 import re
 from ruamel.yaml import YAML
+from .deploytopology import DeployTopology as deploy
 
 
 ######################################
@@ -240,8 +241,8 @@ def main_menu():
     print("\n\n==========Main Menu==========\n")
     print("Please select from the following options: ")
 
-    # Create Commands dict to save commands and later execute based on matching the counter to a dict key
-    commands_dict = {}
+    # Create options dict to later send to deploy_lab
+    options_dict = {}
 
     # Open yaml for the default yaml and read what file to lookup for default menu
     default_menu_file = open('/home/arista/menus/default.yaml')
@@ -257,10 +258,11 @@ def main_menu():
 
     
     counter = 1
+    menu = default_menu_info['default_menu'].replace('.yaml', '')
     for lab in menu_info['lab_list']:
       print("{0}. {1}".format(str(counter),menu_info['lab_list'][lab][0]['description']))
-      commands_dict[str(counter)] = menu_info['lab_list'][lab][0]['command']
-      commands_dict[lab] = menu_info['lab_list'][lab][0]['command']
+      options_dict[str(counter)] = {'selected_lab': lab, 'selected_menu': menu}
+      options_dict[lab] = {'selected_lab': lab, 'selected_menu': menu}
       counter += 1
     print('\n')
 
@@ -275,8 +277,8 @@ def main_menu():
     
     # Check user input to see which menu to change to
     try:
-      if user_input.lower() in commands_dict:
-          os.system(commands_dict[user_input])
+      if user_input.lower() in options_dict:
+          deploy.deploy_lab(options_dict[user_input]['selected_menu'],options_dict[user_input]['selected_menu'])
       elif user_input == '98' or user_input.lower() == 'ssh':
         previous_menu = menu_mode
         menu_mode = 'DEVICE_SSH'

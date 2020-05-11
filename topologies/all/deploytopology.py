@@ -3,7 +3,6 @@
 # TODO: Update file structure in production to match the topo_build.yaml topology type and move these files to 'all'
 
 import json
-import tornado.websocket
 from datetime import timedelta, datetime, timezone, date
 from ruamel.yaml import YAML
 import getopt
@@ -17,39 +16,8 @@ import os
 
 DEBUG = False
 
-class BackEnd(tornado.websocket.WebSocketHandler):
-    connections = set()
-
-    def open(self):
-        self.connections.add(self)
-        self.schedule_update()
-
-    def on_message(self, message):
-        data = json.loads(message)
-        if data['type'] == 'openMessage':
-            pass
-        elif data['type'] == 'clientData':
-            self.deploy_lab(data['selectedMenu'],data['selectedLab'])
-
-    def schedule_update(self):
-        self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
-          
-    def keepalive(self):
-        try:
-            self.write_message(json.dumps({
-                'type': 'keepalive',
-                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'data': 'ping'
-            }))
-        finally:
-            self.schedule_update()
-
-    def on_close(self):
-        tornado.ioloop.IOLoop.instance().remove_timeout(self.timeout)
-  
-    def check_origin(self, origin):
-      return True
-
+class DeployTopology():
+    
     def remove_configlets(self, client, device, lab_configlets):
         """
         Removes all configlets except the ones defined here or starting with SYS_
@@ -121,12 +89,6 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         if DEBUG:
             print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
 
-    def send_to_socket(self,message):
-        self.write_message(json.dumps({
-            'type': 'serverData',
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': message
-        }))
 
     def deploy_lab(self,selected_menu,selected_lab):
 
@@ -148,7 +110,7 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         lab_configlets = lab_info['labconfiglets']
 
         # Send message that deployment is beginning
-        self.send_to_socket("Starting deployment for {0} - {1} lab...".format(selected_menu,selected_lab))
+        print("Starting deployment for {0} - {1} lab...".format(selected_menu,selected_lab))
 
         # Adding new connection to CVP via rcvpapi
         cvp_clnt = ''
@@ -161,22 +123,22 @@ class BackEnd(tornado.websocket.WebSocketHandler):
 
                     except:
                         self.send_to_syslog("ERROR", "CVP is currently unavailable....Retrying in 30 seconds.")
-                        self.send_to_socket("CVP is currently unavailable....Retrying in 30 seconds.")
+                        print("CVP is currently unavailable....Retrying in 30 seconds.")
                         time.sleep(30)
 
         # Make sure option chosen is valid, then configure the topology
-        self.send_to_socket("Deploying configlets for {0} - {1} lab...".format(selected_menu,selected_lab))
+        print("Deploying configlets for {0} - {1} lab...".format(selected_menu,selected_lab))
         self.send_to_syslog("INFO", "Setting {0} topology to {1} setup".format(access_info['topology'], selected_lab))
         self.update_topology(cvp_clnt, selected_lab, lab_configlets)
         
         # Execute all tasks generated from reset_devices()
-        self.send_to_socket("Creating Change Control for for {0} - {1} lab...".format(selected_menu,selected_lab))
+        print("Creating Change Control for for {0} - {1} lab...".format(selected_menu,selected_lab))
         cvp_clnt.getAllTasks("pending")
         tasks_to_check = cvp_clnt.tasks['pending']
         cvp_clnt.execAllTasks("pending")
         self.send_to_syslog("OK", 'Completed setting devices to topology: {}'.format(selected_lab))
 
-        self.send_to_socket("Executing change control for {0} - {1} lab. Please wait for tasks to finish...".format(selected_menu,selected_lab))
+        print("Executing change control for {0} - {1} lab. Please wait for tasks to finish...".format(selected_menu,selected_lab))
         all_tasks_completed = False
         while not all_tasks_completed:
             tasks_running = []
@@ -184,20 +146,20 @@ class BackEnd(tornado.websocket.WebSocketHandler):
                 if cvp_clnt.getTaskStatus(task['workOrderId'])['taskStatus'] != 'Completed':
                     tasks_running.append(task)
                 elif cvp_clnt.getTaskStatus(task['workOrderId'])['taskStatus'] == 'Failed':
-                    self.send_to_socket('Task {0} failed. Please check CVP for more information'.format(task['workOrderId']))
+                    print('Task {0} failed. Please check CVP for more information'.format(task['workOrderId']))
                 else:
                     pass
 
             if len(tasks_running) == 0:
                 
-                self.send_to_socket("Tasks finished. Finalizing deployment for {0} - {1} lab...".format(selected_menu,selected_lab))
+                print("Tasks finished. Finalizing deployment for {0} - {1} lab...".format(selected_menu,selected_lab))
 
                 # Execute additional commands if there are any for the lab
                 for command in additional_commands:
                     os.system(command)
                     
-                self.send_to_socket("Deployment for {0} - {1} lab is complete.".format(selected_menu,selected_lab))
+                print("Deployment for {0} - {1} lab is complete.".format(selected_menu,selected_lab))
                 all_tasks_completed = True
             else:
-                self.send_to_socket("{0}/{1} tasks completed. Please wait...".format(str(len(tasks_to_check) - len(tasks_running)), len(tasks_to_check)))
+                print("{0}/{1} tasks completed. Please wait...".format(str(len(tasks_to_check) - len(tasks_running)), len(tasks_to_check)))
             
