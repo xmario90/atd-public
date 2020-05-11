@@ -17,6 +17,9 @@ import os
 DEBUG = False
 
 class DeployTopology():
+
+    def __init__(self):
+        pass
     
     def remove_configlets(self, client, device, lab_configlets):
         """
