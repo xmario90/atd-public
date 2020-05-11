@@ -352,8 +352,8 @@ def lab_options_menu():
       counter = 1
       for lab in menu_info['lab_list']:
         print("{0}. {1}".format(str(counter),menu_info['lab_list'][lab]['description']))
-        commands_dict[str(counter)] = {'selected_lab': lab, 'selected_menu': menu_mode[4:].replace('.yaml', '')}
-        commands_dict[lab] = {'selected_lab': lab, 'selected_menu': menu_mode[4:].replace('.yaml', '')}
+        options_dict[str(counter)] = {'selected_lab': lab, 'selected_menu': menu_mode[4:].replace('.yaml', '')}
+        options_dict[lab] = {'selected_lab': lab, 'selected_menu': menu_mode[4:].replace('.yaml', '')}
         counter += 1
       print('\n')
 
