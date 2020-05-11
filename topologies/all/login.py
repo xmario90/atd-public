@@ -434,7 +434,7 @@ def main_menu():
     # Check user input to see which menu to change to
     try:
       if user_input.lower() in options_dict:
-          deploy.deploy_lab(selected_menu=options_dict[user_input]['selected_menu'],selected_lab=options_dict[user_input]['selected_lab'])
+          deploy_lab(selected_menu=options_dict[user_input]['selected_menu'],selected_lab=options_dict[user_input]['selected_lab'])
       elif user_input == '98' or user_input.lower() == 'ssh':
         previous_menu = menu_mode
         menu_mode = 'DEVICE_SSH'
