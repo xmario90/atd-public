@@ -339,7 +339,7 @@ def lab_options_menu():
     elif 'LAB_' in menu_mode and menu_mode != 'LAB_OPTIONS':
       
       # Create Commands dict to save commands and later execute based on matching the counter to a dict key
-      commands_dict = {}
+      options_dict = {}
 
       # Open yaml for the lab option (minus 'LAB_' from menu mode) and load the variables
       menu_file = open('/home/arista/menus/' + menu_mode[4:])
@@ -352,8 +352,8 @@ def lab_options_menu():
       counter = 1
       for lab in menu_info['lab_list']:
         print("{0}. {1}".format(str(counter),menu_info['lab_list'][lab]['description']))
-        commands_dict[str(counter)] = menu_info['lab_list'][lab]['command']
-        commands_dict[lab] = menu_info['lab_list'][lab]['command']
+        commands_dict[str(counter)] = {'selected_lab': lab, 'selected_menu': menu_mode[4:].replace('.yaml', '')}
+        commands_dict[lab] = {'selected_lab': lab, 'selected_menu': menu_mode[4:].replace('.yaml', '')}
         counter += 1
       print('\n')
 
@@ -368,9 +368,9 @@ def lab_options_menu():
 
       # Check to see if input is in commands_dict
       try:
-          if user_input.lower() in commands_dict:
+          if user_input.lower() in options_dict:
               previous_menu = menu_mode
-              os.system(commands_dict[user_input])
+              deploy_lab(selected_menu=options_dict[user_input]['selected_menu'],selected_lab=options_dict[user_input]['selected_lab'])
           elif user_input == '97' or user_input.lower() == 'back':
               if menu_mode == previous_menu:
                   menu_mode = 'MAIN'
