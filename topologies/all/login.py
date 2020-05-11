@@ -4,7 +4,7 @@ import sys
 import signal
 import re
 from ruamel.yaml import YAML
-from .deploytopology import DeployTopology as deploy
+from deploytopology import DeployTopology as deploy
 
 
 ######################################
