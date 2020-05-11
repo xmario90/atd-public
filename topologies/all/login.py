@@ -351,9 +351,9 @@ def lab_options_menu():
       
       counter = 1
       for lab in menu_info['lab_list']:
-        print("{0}. {1}".format(str(counter),menu_info['lab_list'][lab][0]['description']))
-        commands_dict[str(counter)] = menu_info['lab_list'][lab][0]['command']
-        commands_dict[lab] = menu_info['lab_list'][lab][0]['command']
+        print("{0}. {1}".format(str(counter),menu_info['lab_list'][lab]['description']))
+        commands_dict[str(counter)] = menu_info['lab_list'][lab]['command']
+        commands_dict[lab] = menu_info['lab_list'][lab]['command']
         counter += 1
       print('\n')
 
@@ -416,7 +416,7 @@ def main_menu():
     counter = 1
     menu = default_menu_info['default_menu'].replace('.yaml', '')
     for lab in menu_info['lab_list']:
-      print("{0}. {1}".format(str(counter),menu_info['lab_list'][lab][0]['description']))
+      print("{0}. {1}".format(str(counter),menu_info['lab_list'][lab]['description']))
       options_dict[str(counter)] = {'selected_lab': lab, 'selected_menu': menu}
       options_dict[lab] = {'selected_lab': lab, 'selected_menu': menu}
       counter += 1
