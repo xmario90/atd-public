@@ -72,7 +72,7 @@ labconfiglets:
       - "Host2-ATD"
   bgp:
     spine1:
-      - "BaseIPv4_Spine2"
+      - "BaseIPv4_Spine1"
       - "Spine1-BGP-Lab"
     spine2:
       - "BaseIPv4_Spine2"
@@ -100,7 +100,7 @@ labconfiglets:
       - "Host2-ATD"
   vxlan:
     spine1:
-      - "BaseIPv4_Spine2"
+      - "BaseIPv4_Spine1"
       - "Spine1-BGP-Lab"
     spine2:
       - "BaseIPv4_Spine2"
@@ -132,7 +132,7 @@ labconfiglets:
       - "Host2-ATD"
   l2evpn:
     spine1:
-      - "BaseIPv4_Spine2"
+      - "BaseIPv4_Spine1"
       - "Spine1-L2EVPN-Lab"
     spine2:
       - "BaseIPv4_Spine2"
@@ -163,7 +163,7 @@ labconfiglets:
       - "Host2-ATD"
   l3evpn:
     spine1:
-      - "BaseIPv4_Spine2"
+      - "BaseIPv4_Spine1"
       - "Spine1-L3EVPN-Lab"
     spine2:
       - "BaseIPv4_Spine2"
@@ -191,7 +191,7 @@ labconfiglets:
       - "Host2-ATD"
   cvp:
     spine1:
-      - "BaseIPv4_Spine2"
+      - "BaseIPv4_Spine1"
       - "Spine1-BGP-Lab"
     spine2:
       - "BaseIPv4_Spine2"
