@@ -11,11 +11,11 @@ lab_list:
   media-ospf:
     description: "Media - OSPF (media-ospf)"
   media-bgp:
-      description: "Media - BGP  (media-bgp)"
+    description: "Media - BGP  (media-bgp)"
   media-mcast:
-      description: "Media - Multicast (media-mcast)"
+    description: "Media - Multicast (media-mcast)"
   media-reset:
-      description: "Media - Reset All Devices to Broadcaster Base (media-reset)"
+    description: "Media - Reset All Devices to Broadcaster Base (media-reset)"
 labconfiglets:
   media-setup:    
     spine1:
