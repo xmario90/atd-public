@@ -20,6 +20,9 @@ DEBUG = False
 class BackEnd(tornado.websocket.WebSocketHandler):
     connections = set()
 
+    def __init__(self):
+        self.status = ''
+
     def open(self):
         self.connections.add(self)
         self.schedule_update()
@@ -30,6 +33,16 @@ class BackEnd(tornado.websocket.WebSocketHandler):
             pass
         elif data['type'] == 'clientData':
             self.deploy_lab(data['selectedMenu'],data['selectedLab'])
+        elif data['type'] == 'getStatus':
+            self.send_status()
+
+    def send_status(self):
+        self.write_message(json.dumps({
+            'type': 'serverData',
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'status': self.status
+        }))
+
 
     def schedule_update(self):
         self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
@@ -122,6 +135,7 @@ class BackEnd(tornado.websocket.WebSocketHandler):
             print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
 
     def send_to_socket(self,message):
+        self.status = message
         self.write_message(json.dumps({
             'type': 'serverData',
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
