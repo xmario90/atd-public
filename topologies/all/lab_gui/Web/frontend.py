@@ -26,6 +26,7 @@ class FrontEnd(tornado.web.RequestHandler):
       access_file = open('/etc/ACCESS_INFO.yaml', 'r')
       access_info = YAML().load(access_file)
       access_file.close()
+      print(access_info)
       return access_info
 
     def _get_ip_address(self):
