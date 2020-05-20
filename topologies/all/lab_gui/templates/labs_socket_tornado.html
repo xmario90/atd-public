@@ -21,7 +21,7 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <br>
-                <img src="{{static_url('images/logotransparent.png)" class="arista-logo">
+                <img src="{{static_url('images/logotransparent.png')}}" class="arista-logo">
                 <hr class="hr">
                 <li>
                     <a href="/labguides/" target="_blank">Lab Guides</a><a href="/labguides/ATD.pdf" target="_blank">(PDF)</a>
@@ -58,8 +58,11 @@
                 <table class="table table-striped">
                   <thead> <tr> <th>Device</th> <th>Username</th> <th>Password</th> </tr> </thead>
                   <tbody> <tr>
-                    {% for item in access_info %}
-                    <td>item</td>
+                    <td>Lab Frontend</td> <td>arista</td> <td>@rista123</td> </tr> <tr>
+                    <td>CVP</td> <td>{{ access_info['login_info']['cvp']['gui']['user'] }}</td> <td>{{ access_info['login_info']['cvp']['gui']['pw'] }}</td> </tr> <tr>
+                    <td>IPAM</td> <td>arista</td> <td>Arista123</td> </tr>
+                    <td>Lab VM SSH</td> <td>{{access_info['login_info']['jump_host']['user']}}</td> <td>{{access_info['login_info']['jump_host']['pw']}}</td> </tr>
+                    <td>VEOS Instances</td> <td>{{access_info['login_info']['cvp']['gui']['user']}}</td> <td>{{access_info['login_info']['cvp']['gui']['pw']}}</td> </tr>
                   </tbody> </table>
 
                 <br>
