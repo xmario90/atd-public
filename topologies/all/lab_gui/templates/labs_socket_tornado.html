@@ -7,10 +7,10 @@
 <title>Arista ATD</title>
 
 <!-- Bootstrap core CSS -->
-<link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="http://{{ip_address}}/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+<link href="http://{{ip_address}}/css/simple-sidebar.css" rel="stylesheet">
 {% endblock %}
 
 <body>
@@ -21,7 +21,7 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <br>
-                <img src="{% static 'images/logotransparent.png' %}" class="arista-logo">
+                <img src="http://{{ip_address}}/images/logotransparent.png" class="arista-logo">
                 <hr class="hr">
                 <li>
                     <a href="/labguides/" target="_blank">Lab Guides</a><a href="/labguides/ATD.pdf" target="_blank">(PDF)</a>
@@ -30,7 +30,7 @@
                     <a href="/guacamole/" target="_blank">Lab Frontend</a>
                 </li>
                 <li>
-                    <a href="https://{{ip_address}}>>" target="_blank">CVP</a>
+                    <a href="https://{{ip_address}}" target="_blank">CVP</a>
                 </li>
                 <li>
                     <a href="https://{{ip_address}}/telemetry/" target="_blank">CVP Telemetry</a>
@@ -97,8 +97,8 @@
 
     {% block scripts %}    <!-- Bootstrap core JavaScript -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{% static 'vendor/popper/popper.min.js'%}"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js'%}"></script>
+    <script src="http://{{ip_address}}/vendor/popper/popper.min.js"></script>
+    <script src="http://{{ip_address}}/vendor/bootstrap/js/bootstrap.min.js"></script>
     
     <script type="text/javascript" charset="utf-8">
         // Set stage for incoming socket events
