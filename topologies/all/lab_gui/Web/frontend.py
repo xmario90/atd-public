@@ -50,6 +50,6 @@ class FrontEnd(tornado.web.RequestHandler):
 
     def get(self):
       menu_dict = self._get_menus()
-      access_info = self._get_credentials_data()
+      access_info = self._get_access_info()
       ip_address = self._get_ip_address()
       self.write(self._render_template(menu_dict,access_info,ip_address))
