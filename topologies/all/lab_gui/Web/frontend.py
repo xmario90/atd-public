@@ -26,7 +26,6 @@ class FrontEnd(tornado.web.RequestHandler):
       access_file = open('/etc/ACCESS_INFO.yaml', 'r')
       access_info = YAML().load(access_file)
       access_file.close()
-      print(access_info)
       return access_info
 
     def _get_ip_address(self):
@@ -35,6 +34,8 @@ class FrontEnd(tornado.web.RequestHandler):
       return ip_address.text
 
     def _render_template(self,menu_data,access_info,ip_address):
+      for item in access_info:
+        print(item)
       with open('./templates/labs_socket_tornado.html', 'r') as file:
           template = file.read()
           env = jinja2.Environment(
