@@ -18,7 +18,7 @@ pip3 install tornado
 pip3 install beautifulsoup4
 
 # Screen scrape credentials and make credentials file
-python3 /tmp/atd/topologies/all/lab_gui/screen_scrape.py
+cd /tmp/atd/topologies/all/lab_gui && python3 screen_scrape.py
 
 
 # Clean up previous stuff to make sure it's current

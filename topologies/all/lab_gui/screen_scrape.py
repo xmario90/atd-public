@@ -1,21 +1,27 @@
+#!/usr/bin/python3
 from bs4 import BeautifulSoup
 import requests
 from ruamel.yaml import YAML
 import sys
 import os
+import re
 
 def delete_old_file():
     if os.path.exists('lab_credentials.yaml'):
         os.remove('lab_credentials.yaml')
 
 def create_credential_file():
-    response = requests.get(url='http://54.176.90.209', verify=False)
+
+    credential_info = {}
+    response = requests.get(url='http://127.0.0.1', verify=False)
 
     html_soup = BeautifulSoup(response.text, 'html.parser')
 
     user_data = html_soup.find('div', class_='container-fluid')
+    url_data = html_soup.find('ul', class_='sidebar-nav')
 
-    credential_info = {}
+    credential_info['ip_address'] = re.search('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', url_data)
+
 
     replace_tags = ['<tr>', '</tr>', '<td>', '</td>']
 

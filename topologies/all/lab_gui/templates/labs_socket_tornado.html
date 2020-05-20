@@ -7,10 +7,10 @@
 <title>Arista ATD</title>
 
 <!-- Bootstrap core CSS -->
-<link href=".vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href=".css/simple-sidebar.css" rel="stylesheet">
+<link href="css/simple-sidebar.css" rel="stylesheet">
 {% endblock %}
 
 <body>
@@ -21,7 +21,7 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <br>
-                <img src=".images/logotransparent.png" class="arista-logo">
+                <img src="images/logotransparent.png" class="arista-logo">
                 <hr class="hr">
                 <li>
                     <a href="/labguides/" target="_blank">Lab Guides</a><a href="/labguides/ATD.pdf" target="_blank">(PDF)</a>
@@ -30,16 +30,16 @@
                     <a href="/guacamole/" target="_blank">Lab Frontend</a>
                 </li>
                 <li>
-                    <a href="https://54.176.90.209" target="_blank">CVP</a>
+                    <a href="https://{{credentials_info['ip_address']}}>>" target="_blank">CVP</a>
                 </li>
                 <li>
-                    <a href="https://54.176.90.209/telemetry/" target="_blank">CVP Telemetry</a>
+                    <a href="https://{{credentials_info['ip_address']}}/telemetry/" target="_blank">CVP Telemetry</a>
                 </li>
                 <li>
                     <a href="/ipam/" target="_blank">IPAM</a>
                 </li>
                 <li>
-                    <a href="http://54.176.90.209:8088" target="_blank">Jenkins</a>
+                    <a href="http://{{credentials_info['ip_address']}}:8088" target="_blank">Jenkins</a>
                 </li>
             </ul>
         </div>
