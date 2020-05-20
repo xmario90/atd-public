@@ -17,10 +17,6 @@ pip3 install rcvpapi tornado beautifulsoup4
 pip3 install tornado
 pip3 install beautifulsoup4
 
-# Screen scrape credentials and make credentials file
-cd /tmp/atd/topologies/all/lab_gui && python3 screen_scrape.py
-cd /tmp/atd/labvm/services/atdFiles
-
 
 # Clean up previous stuff to make sure it's current
 rm -rf /var/www/html/atd/labguides/
@@ -57,3 +53,6 @@ mkdir /var/www/html/atd/labguides/
 # Put the new HTML and PDF in the proper directories
 mv /tmp/atd/topologies/$TOPO/labguides/build/latex/ATD.pdf /var/www/html/atd/labguides/
 mv /tmp/atd/topologies/$TOPO/labguides/build/html/* /var/www/html/atd/labguides/ && chown -R www-data:www-data /var/www/html/atd/labguides
+
+# Screen scrape credentials and make credentials file
+cd /home/arista/lab_gui && python3 screen_scrape.py
