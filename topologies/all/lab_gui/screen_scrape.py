@@ -40,7 +40,7 @@ def create_credential_file():
             for tag in replace_tags:
                 line = line.replace(tag, '')
                 line_split = line.split(' ')
-                credential_info['lab_vm'] = {'username': line_split[1], 'password': line_split[2]}
+                credential_info['lab_vm'] = {'username': line_split[3], 'password': line_split[4]}
 
     dump_file = open('lab_credentials.yaml', 'w')
     YAML().dump(credential_info, dump_file)

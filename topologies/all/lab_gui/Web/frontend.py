@@ -21,9 +21,9 @@ class FrontEnd(tornado.web.RequestHandler):
 
       return menus_dict
 
-    def _get_credentials_data():
+    def _get_credentials_data(self):
       '''Get credential data for use in updating variables in new html file'''
-      credentials_file = open('../lab_credentials.yaml', 'r')
+      credentials_file = open('lab_credentials.yaml', 'r')
       credentials_info = YAML().load(credentials_file)
       credentials_file.close()
       return credentials_info
