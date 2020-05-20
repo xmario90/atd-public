@@ -19,6 +19,7 @@ pip3 install beautifulsoup4
 
 # Screen scrape credentials and make credentials file
 cd /tmp/atd/topologies/all/lab_gui && python3 screen_scrape.py
+cd /tmp/atd/labvm/services/atdFiles
 
 
 # Clean up previous stuff to make sure it's current
