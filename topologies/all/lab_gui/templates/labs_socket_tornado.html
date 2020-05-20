@@ -95,41 +95,27 @@
                   </tr>
                   </tbody> </table>
                 <br>
+                <h3>Last Executed Lab: </h3>
+                <h4 id="lastExecuted"></h4>
+                <h3>Execution Status: </h3>
+                <h4 id="executionStatus"></h4>
             </div>
+            
         </div>
         <!-- /#page-content-wrapper -->
 
     </div>
     <!-- /#wrapper -->
 
-    {% block content %}
-    <h2>Choose a lab: </h2>
-    {% for menu_type in data %}
-    <div>
-        <table>
-            <tr><h4> {{ menu_type }} </h4></tr>
-            <td><select id="{{menu_type}}LabSelection" name="{{menu_type}}LabSelection">
-                {% for menu_item in data[menu_type] %}
-                <option value={{menu_item}}> {{ menu_item }} </option>
-                {% endfor %}
-            </select></td>
-            <td></td>
-            {% endfor %}
-        </table>
-    </div>
-    <h3 style="text-indent: 1em">Last Executed Lab: </h3>
-    <h4 id="lastExecuted" style="text-indent: 1em"></h4>
-    <h3 style="text-indent: 1em">Execution Status: </h3>
-    <h4 id="executionStatus" style="text-indent: 1em"></h4>
-    {% endblock %}
 
 
-    {% block scripts %}    <!-- Bootstrap core JavaScript -->
+
+
+    {% block scripts %}
+    <!-- Bootstrap core JavaScript -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="http://{{ip_address}}/vendor/popper/popper.min.js"></script>
     <script src="http://{{ip_address}}/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    </script>
     
     <script type="text/javascript" charset="utf-8">
         // Set stage for incoming socket events
