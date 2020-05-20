@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import tornado.ioloop
 import asyncio
+import os
 
 # Import frontend and backend files
 from Web.backend import BackEnd
@@ -9,7 +10,8 @@ from Web.frontend import FrontEnd
 def create_app():
     return tornado.web.Application([
         (r"/labs/",FrontEnd),
-        (r"/backend/",BackEnd)])
+        (r"/backend/",BackEnd)],
+        static_path=os.getcwd())
 
 
 if __name__ == '__main__':

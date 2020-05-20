@@ -6,6 +6,7 @@ import os
 from ruamel.yaml import YAML
 import jinja2
 import tornado.web
+import requests
 
 class FrontEnd(tornado.web.RequestHandler):
     def _get_menus(self):
@@ -21,14 +22,18 @@ class FrontEnd(tornado.web.RequestHandler):
 
       return menus_dict
 
-    def _get_credentials_data(self):
-      '''Get credential data for use in updating variables in new html file'''
-      credentials_file = open('lab_credentials.yaml', 'r')
-      credentials_info = YAML().load(credentials_file)
-      credentials_file.close()
-      return credentials_info
+    def _get_access_info(self):
+      access_file = open('/etc/ACCESS_INFO.yaml', 'r')
+      access_info = YAML().load(access_file)
+      access_file.close()
+      return access_info
 
-    def _render_template(self,menu_data,credentials_info):
+    def _get_ip_address(self):
+      url = 'http://ipecho.net/plain'
+      ip_address = requests.get(url=url, verify=False)
+      return ip_address.text
+
+    def _render_template(self,menu_data,access_info,ip_address):
       with open('./templates/labs_socket_tornado.html', 'r') as file:
           template = file.read()
           env = jinja2.Environment(
@@ -38,12 +43,13 @@ class FrontEnd(tornado.web.RequestHandler):
               extensions=['jinja2.ext.do'])
           templategen = env.from_string(template)
           if templategen:
-              web_data = templategen.render({'data': menu_data, 'credentials_info': credentials_info})
+              web_data = templategen.render({'data': menu_data, 'access_info': access_info, 'ip_address': ip_address})
               return(web_data)
           return('<html>Error rendering template</html>')
 
 
     def get(self):
       menu_dict = self._get_menus()
-      credentials_info = self._get_credentials_data()
-      self.write(self._render_template(menu_dict,credentials_info))
+      access_info = self._get_credentials_data()
+      ip_address = self._get_ip_address()
+      self.write(self._render_template(menu_dict,access_info,ip_address))

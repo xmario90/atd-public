@@ -7,10 +7,10 @@
 <title>Arista ATD</title>
 
 <!-- Bootstrap core CSS -->
-<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{static_url('vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="css/simple-sidebar.css" rel="stylesheet">
+<link href="{{static_url('css/simple-sidebar.css')}}" rel="stylesheet">
 {% endblock %}
 
 <body>
@@ -21,7 +21,7 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <br>
-                <img src="images/logotransparent.png" class="arista-logo">
+                <img src="{{static_url('images/logotransparent.png)" class="arista-logo">
                 <hr class="hr">
                 <li>
                     <a href="/labguides/" target="_blank">Lab Guides</a><a href="/labguides/ATD.pdf" target="_blank">(PDF)</a>
@@ -30,16 +30,16 @@
                     <a href="/guacamole/" target="_blank">Lab Frontend</a>
                 </li>
                 <li>
-                    <a href="https://{{credentials_info['ip_address']}}>>" target="_blank">CVP</a>
+                    <a href="https://{{ip_address}}>>" target="_blank">CVP</a>
                 </li>
                 <li>
-                    <a href="https://{{credentials_info['ip_address']}}/telemetry/" target="_blank">CVP Telemetry</a>
+                    <a href="https://{{ip_address}}/telemetry/" target="_blank">CVP Telemetry</a>
                 </li>
                 <li>
                     <a href="/ipam/" target="_blank">IPAM</a>
                 </li>
                 <li>
-                    <a href="http://{{credentials_info['ip_address']}}:8088" target="_blank">Jenkins</a>
+                    <a href="http://{{ip_address}}:8088" target="_blank">Jenkins</a>
                 </li>
             </ul>
         </div>
@@ -58,11 +58,11 @@
                 <table class="table table-striped">
                   <thead> <tr> <th>Device</th> <th>Username</th> <th>Password</th> </tr> </thead>
                   <tbody> <tr>
-                    <td>Lab Frontend</td> <td>{{credentials_info['lab_frontend']['username']}}</td> <td>{{credentials_info['lab_frontend']['password']}}</td> </tr> <tr>
-                    <td>CVP</td> <td>{{credentials_info['cvp']['username']}}</td> <td>{{credentials_info['cvp']['password']}}</td> </tr> <tr>
-                    <td>IPAM</td> <td>{{credentials_info['ipam']['username']}}</td> <td>{{credentials_info['ipam']['password']}}</td> </tr>
-                    <td>Lab VM SSH</td> <td>{{credentials_info['lab_vm']['username']}}</td> <td>{{credentials_info['lab_vm']['password']}}</td> </tr>
-                    <td>VEOS Instances</td> <td>{{credentials_info['cvp']['username']}}</td> <td>{{credentials_info['cvp']['password']}}</td> </tr>
+                    <td>Lab Frontend</td> <td>arista</td> <td>@rista123</td> </tr> <tr>
+                    <td>CVP</td> <td>{{access_info['login_info']['cvp']['gui']['user']}}</td> <td>{{access_info['login_info']['cvp']['gui']['pw']}}</td> </tr> <tr>
+                    <td>IPAM</td> <td>arista</td> <td>Arista123</td> </tr>
+                    <td>Lab VM SSH</td> <td>{{access_info['login_info']['jump_host']['user']}}</td> <td>{{access_info['login_info']['jump_host']['pw']}}</td> </tr>
+                    <td>VEOS Instances</td> <td>{{access_info['login_info']['cvp']['gui']['user']}}</td> <td>{{access_info['login_info']['cvp']['gui']['pw']}}</td> </tr>
                   </tbody> </table>
 
                 <br>
@@ -97,8 +97,8 @@
 
     {% block scripts %}    <!-- Bootstrap core JavaScript -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src=".vendor/popper/popper.min.js"></script>
-    <script src=".vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{static_url('vendor/popper/popper.min.js')}}"></script>
+    <script src="{{static_url('vendor/bootstrap/js/bootstrap.min.js')}}"></script>
     
     <script type="text/javascript" charset="utf-8">
         // Set stage for incoming socket events
