@@ -73,10 +73,39 @@
     </div>
     <!-- /#wrapper -->
 
+
+        <br><br>
+        <!-- Page Content -->
+        <div id="lab-deployer-wrapper">
+            <div class="container-fluid">
+                <h2>Lab Deployment:</h2>
+                <br>
+                <br>
+                <table class="table table-striped">
+                  <thead> <tr> <th>Device</th> <th>Username</th> <th>Password</th> </tr> </thead>
+                  <tbody> 
+                    {% for menu_type in data %}
+                    <tr>
+                    <td><select id="{{menu_type}}LabSelection" name="{{menu_type}}LabSelection">
+                        {% for menu_item in data[menu_type] %}
+                        <option value={{menu_item}}> {{ menu_item }} </option>
+                        {% endfor %}
+                    </select></td>
+                    <td><button id="{{menu_type}}SubmitButton">Execute {{ menu_type }} Lab</button> </td>
+                  </tr>
+                  </tbody> </table>
+                <br>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
     {% block content %}
-    <h2 style="text-indent: 1em">Choose a lab: </h2>
+    <h2>Choose a lab: </h2>
     {% for menu_type in data %}
-    <div style="text-indent: 2em">
+    <div>
         <table>
             <tr><h4> {{ menu_type }} </h4></tr>
             <td><select id="{{menu_type}}LabSelection" name="{{menu_type}}LabSelection">
@@ -84,7 +113,7 @@
                 <option value={{menu_item}}> {{ menu_item }} </option>
                 {% endfor %}
             </select></td>
-            <td><button id="{{menu_type}}SubmitButton">Execute {{ menu_type }} Lab</button></td>
+            <td></td>
             {% endfor %}
         </table>
     </div>
