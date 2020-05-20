@@ -53,6 +53,3 @@ mkdir /var/www/html/atd/labguides/
 # Put the new HTML and PDF in the proper directories
 mv /tmp/atd/topologies/$TOPO/labguides/build/latex/ATD.pdf /var/www/html/atd/labguides/
 mv /tmp/atd/topologies/$TOPO/labguides/build/html/* /var/www/html/atd/labguides/ && chown -R www-data:www-data /var/www/html/atd/labguides
-
-# Screen scrape credentials and make credentials file
-cd /home/arista/lab_gui && python3 screen_scrape.py
