@@ -20,7 +20,9 @@ def create_credential_file():
     user_data = html_soup.find('div', class_='container-fluid')
     url_data = html_soup.find('ul', class_='sidebar-nav')
 
-    credential_info['ip_address'] = re.search('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', url_data).group()
+    credential_info['ip_address'] = re.search('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', url_data)
+
+    print(credential_info['ip_address'])
 
 
     replace_tags = ['<tr>', '</tr>', '<td>', '</td>']
