@@ -36,7 +36,7 @@ def create_credential_file():
                 line = line.replace(tag, '')
                 line_split = line.split(' ')
                 credential_info['ipam'] = {'username': line_split[1], 'password': line_split[2]}
-        elif 'LAB VM SSH' in line:
+        elif 'Lab VM SSH' in line:
             for tag in replace_tags:
                 line = line.replace(tag, '')
                 line_split = line.split(' ')

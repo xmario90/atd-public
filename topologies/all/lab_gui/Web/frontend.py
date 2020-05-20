@@ -21,7 +21,14 @@ class FrontEnd(tornado.web.RequestHandler):
 
       return menus_dict
 
-    def _render_template(self,menu_data):
+    def _get_credentials_data():
+      '''Get credential data for use in updating variables in new html file'''
+      credentials_file = open('../lab_credentials.yaml', 'r')
+      credentials_info = YAML().load(credentials_file)
+      credentials_file.close()
+      return credentials_info
+
+    def _render_template(self,menu_data,credentials_info):
       with open('./templates/labs_socket_tornado.html', 'r') as file:
           template = file.read()
           env = jinja2.Environment(
@@ -31,11 +38,12 @@ class FrontEnd(tornado.web.RequestHandler):
               extensions=['jinja2.ext.do'])
           templategen = env.from_string(template)
           if templategen:
-              web_data = templategen.render({'data': menu_data})
+              web_data = templategen.render({'data': menu_data, 'credentials_info': credentials_info})
               return(web_data)
           return('<html>Error rendering template</html>')
 
 
     def get(self):
       menu_dict = self._get_menus()
-      self.write(self._render_template(menu_dict))
+      credentials_info = self._get_credentials_data()
+      self.write(self._render_template(menu_dict,credentials_info))

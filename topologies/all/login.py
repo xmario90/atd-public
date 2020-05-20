@@ -6,7 +6,6 @@ import re
 from ruamel.yaml import YAML
 import json
 from datetime import timedelta, datetime, timezone, date
-from ruamel.yaml import YAML
 import getopt
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
