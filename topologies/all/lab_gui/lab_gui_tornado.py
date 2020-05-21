@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import tornado.ioloop
 import asyncio
-import os
 
 # Import frontend and backend files
 from Web.backend import BackEnd
@@ -14,7 +13,6 @@ def create_app():
 
 
 if __name__ == '__main__':
-    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) # Testing Only
     app = create_app()
     app.listen(8888)
     try:
