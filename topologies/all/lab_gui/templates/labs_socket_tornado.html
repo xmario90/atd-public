@@ -118,13 +118,13 @@
     
     <script type="text/javascript" charset="utf-8">
         // Set stage for incoming socket events
-        var url = ''
-        var ws = ''
+        var url = '';
         $(document).ready(function() {
     
             url = window.location.origin;
             url = url.replace("http:","ws:");
             url += "/backend/";
+            console.log(url);
     
             ws = new WebSocket(url);
             ws.onopen = function() {
