@@ -10,8 +10,7 @@ from Web.frontend import FrontEnd
 def create_app():
     return tornado.web.Application([
         (r"/labs/",FrontEnd),
-        (r"/backend/",BackEnd)],
-        static_path=os.getcwd())
+        (r"/backend/",BackEnd)])
 
 
 if __name__ == '__main__':
