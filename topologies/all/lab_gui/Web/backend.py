@@ -8,9 +8,9 @@ from datetime import timedelta, datetime, timezone, date
 from ruamel.yaml import YAML
 import getopt
 import sys
+from rcvpapi.rcvpapi import *
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from rcvpapi.rcvpapi import *
 import logging
 import time
 import os
