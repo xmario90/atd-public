@@ -7,9 +7,9 @@ from ruamel.yaml import YAML
 import json
 from datetime import timedelta, datetime, timezone, date
 import getopt
+from rcvpapi.rcvpapi import *
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from rcvpapi.rcvpapi import *
 import logging
 import time
 
@@ -19,6 +19,7 @@ import time
 ########## Global Variables ##########
 ######################################
 DEBUG = False
+__version__ = "2.1"
 
 # Open ACCESS_INFO.yaml and load the variables
 f = open('/etc/ACCESS_INFO.yaml')
@@ -208,8 +209,8 @@ def deploy_lab(selected_menu,selected_lab):
                 
             print("Deployment for {0} - {1} lab is complete.".format(selected_menu,selected_lab))
             all_tasks_completed = True
-        else:
-            print("{0}/{1} tasks completed. Please wait...".format(str(len(tasks_to_check) - len(tasks_running)), len(tasks_to_check)))
+        
+    input("Lab Setup Completed. Please press Enter to continue...")
         
 
 def device_menu():
