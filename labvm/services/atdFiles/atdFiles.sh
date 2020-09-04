@@ -56,6 +56,7 @@ cp /tmp/atd/topologies/all/ConfigureTopology.py /usr/local/bin/ConfigureTopology
 cp /tmp/atd/topologies/all/__init__.py /usr/local/bin/ConfigureTopology/__init__.py
 cp /tmp/atd/topologies/all/login.py /usr/local/bin/login.py
 cp /tmp/atd/topologies/all/labUI.py /usr/local/bin/labUI.py
+cp -R /tmp/atd/topologies/all/lab_gui /usr/local/bin/lab_gui
 chmod +x /usr/local/bin/labUI.py
 
 # Copy over new nginx config if it exists and restart service
