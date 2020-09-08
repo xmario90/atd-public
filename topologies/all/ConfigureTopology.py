@@ -64,7 +64,7 @@ class WebSocketClient(object):
           
     def keep_alive(self):
         try:
-            self.write_message(json.dumps({
+            self.ws.write_message(json.dumps({
                 'type': 'keepalive',
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'data': 'ping'

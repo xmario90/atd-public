@@ -22,6 +22,7 @@ class BackEnd(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         data = json.loads(message)
+        self.send_to_syslog("INFO", 'Received message {0} in socket.'.format(message))
         if data['type'] == 'openMessage':
             pass
         elif data['type'] == 'clientData':
@@ -41,9 +42,9 @@ class BackEnd(tornado.websocket.WebSocketHandler):
             print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
 
     def schedule_update(self):
-        self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
+        self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keep_alive)
           
-    def keepalive(self):
+    def keep_alive(self):
         try:
             self.write_message(json.dumps({
                 'type': 'keepalive',
