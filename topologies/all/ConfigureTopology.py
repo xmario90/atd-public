@@ -51,18 +51,18 @@ class WebSocketClient(object):
 
     @gen.coroutine
     def connect(self):
-        print("trying to connect")
+        self.send_to_syslog("INFO", "Trying to connect to web socket.")
         try:
             self.ws = yield websocket_connect(self.url)
-        except Exception, e:
-            print("connection error")
+        except Exception as e:
+            self.send_to_syslog("ERROR", "Cannot connect to web socket.")
         else:
-            print("connected")
+            self.send_to_syslog("OK", "Connected to web socket.")
 
     def schedule_update(self):
         self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
           
-    def keepalive(self):
+    def keep_alive(self):
         try:
             self.write_message(json.dumps({
                 'type': 'keepalive',
@@ -71,6 +71,18 @@ class WebSocketClient(object):
             }))
         finally:
             self.schedule_update()
+
+    def send_to_syslog(self,mstat,mtype):
+        """
+        Function to send output from service file to Syslog
+        Parameters:
+        mstat = Message Status, ie "OK", "INFO" (required)
+        mtype = Message to be sent/displayed (required)
+        """
+        mmes = "\t" + mtype
+        syslog.syslog("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
+        if DEBUG:
+            print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
 
 # Create class to handle configuring the topology
 class ConfigureTopology():
@@ -84,11 +96,14 @@ class ConfigureTopology():
         
     def connect_to_websocket(self):
         ws = WebSocketClient('ws://127.0.0.1:8888/backend', 5)
+        return ws
+
+    def send_to_socket(self,message):
         ws.write_message(json.dumps({
             'type': 'serverData',
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': 'connected'
-        }))
+            'status': message
+        }))  
 
     def connect_to_cvp(self,access_info):
         # Adding new connection to CVP via rcvpapi
