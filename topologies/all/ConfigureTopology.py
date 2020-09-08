@@ -2,15 +2,14 @@
 
 from rcvpapi.rcvpapi import *
 import syslog, time
+from datetime import timedelta, datetime, timezone, date
 from ruamel.yaml import YAML
 import paramiko
 from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from tornado.ioloop import IOLoop, PeriodicCallback
-from tornado import gen
-from tornado.websocket import websocket_connect
+import socketio
 
 
 
@@ -34,41 +33,6 @@ ztp_cancel = """enable
 zerotouch cancel
 """
 
-class WebSocketClient(object):
-    def __init__(self, url, timeout):
-        self.url = url
-        self.timeout = timeout
-        self.ioloop = IOLoop.instance()
-        self.ws = None
-        self.connect()
-        PeriodicCallback(self.keep_alive, 20000).start()
-        self.ioloop.start()
-
-    def connect(self):
-        print("trying to connect")
-        try:
-            self.ws = yield websocket_connect(self.url)
-        except Exception, e:
-            print("connection error")
-        else:
-            print("connected")
-            self.run()
-
-    def run(self):
-        while True:
-            msg = yield self.ws.read_message()
-            if msg is None:
-                print("connection closed")
-                self.ws = None
-                break
-
-    def keep_alive(self):
-        if self.ws is None:
-            self.connect()
-        else:
-            self.ws.write_message("keep alive")
-
-
 # Create class to handle configuring the topology
 class ConfigureTopology():
 
@@ -76,9 +40,19 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
-        self.websocket = WebSocketClient("ws://127.0.0.1:8888/backend", 5)
         self.deploy_lab()
+        
+    def connect_to_websocket(self):
+        self.sio = socketio.Client()
+        self.sio.connect('http://127.0.0.1:8888/backend')
 
+    def send_to_socket(self,message):
+        self.sio.emit(json.dumps({
+            'type': 'serverData',
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'status': message
+        }))
+        
     def connect_to_cvp(self,access_info):
         # Adding new connection to CVP via rcvpapi
         cvp_clnt = ''
