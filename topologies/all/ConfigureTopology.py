@@ -9,7 +9,7 @@ from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from socketIO_client import SocketIO, LoggingNamespace
+from tornado.websocket import websocket_connect
 
 
 
@@ -43,8 +43,8 @@ class ConfigureTopology():
         self.deploy_lab()
         
     def connect_to_websocket(self):
-        socket = SocketIO('127.0.0.1/backend', '8888', LoggingNamespace)
-        self.emit(json.dumps({
+        ws = websocket_connect('ws://127.0.0.1:8888/backend')
+        ws.write_message(json.dumps({
             'type': 'serverData',
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'status': 'connected'
