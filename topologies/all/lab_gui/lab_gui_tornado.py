@@ -3,8 +3,8 @@ import tornado.ioloop
 import asyncio
 
 # Import frontend and backend files
-from Web.backend import BackEnd
-from Web.frontend import FrontEnd
+from Web.BackEnd import BackEnd
+from Web.FrontEnd import FrontEnd
 
 def create_app():
     return tornado.web.Application([

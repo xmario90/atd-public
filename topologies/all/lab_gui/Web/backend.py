@@ -11,7 +11,7 @@ import sys
 from rcvpapi.rcvpapi import *
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-import logging
+import syslog
 import time
 import os
 
@@ -19,12 +19,11 @@ DEBUG = False
 
 class BackEnd(tornado.websocket.WebSocketHandler):
     connections = set()
-
-    def __init__(self):
-        self.status = ''
-
+    status = ''
+    
     def open(self):
         self.connections.add(self)
+        self.send_to_syslog('OK', 'Connection opened from {0}'.format(self.request.remote_ip))
         self.schedule_update()
 
     def on_message(self, message):
