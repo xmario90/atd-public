@@ -4,7 +4,7 @@ After=atdFiles.service
 
 [Service]
 Type=forking
-ExecStart=/usr/local/bin/lab_gui/lab_gui.py
+ExecStart=/usr/local/bin/labGui.py
 TimeoutStartSec=infinity
 Restart=on-failure
 RestartSec=60

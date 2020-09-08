@@ -34,7 +34,7 @@ class FrontEnd(tornado.web.RequestHandler):
       return ip_address.text
 
     def _render_template(self,menu_data,access_info,ip_address):
-      with open('./templates/labs_socket_tornado.html', 'r') as file:
+      with open('./lab_gui/templates/labs_socket_tornado.html', 'r') as file:
           template = file.read()
           env = jinja2.Environment(
               loader=jinja2.BaseLoader(),

@@ -126,7 +126,7 @@
     
             url = window.location.origin;
             url = url.replace("http:","ws:");
-            url += "/backend/";
+            url += "/backend";
             console.log(url);
     
             ws = new WebSocket(url);
@@ -163,7 +163,7 @@
         $('#{{menu_type}}SubmitButton').click(function() {
             url = window.location.origin;
             url = url.replace("http:","ws:");
-            url += "/backend/";
+            url += "/backend";
     
             console.log(url);
             var lab = document.getElementById("{{menu_type}}LabSelection");

@@ -3,13 +3,13 @@ import tornado.ioloop
 import asyncio
 
 # Import frontend and backend files
-from Web.BackEnd import BackEnd
-from Web.FrontEnd import FrontEnd
+from lab_gui.Web.BackEnd import BackEnd
+from lab_gui.Web.FrontEnd import FrontEnd
 
 def create_app():
     return tornado.web.Application([
-        (r"/labs/",FrontEnd),
-        (r"/backend/",BackEnd)])
+        (r"/labs",FrontEnd),
+        (r"/backend",BackEnd)])
 
 
 if __name__ == '__main__':
