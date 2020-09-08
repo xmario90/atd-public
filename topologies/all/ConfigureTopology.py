@@ -40,11 +40,13 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
+        self.sio = connect_to_websocket()
         self.deploy_lab()
         
     def connect_to_websocket(self):
-        self.sio = socketio.Client()
-        self.sio.connect('http://127.0.0.1:8888/backend')
+        sio = socketio.Client()
+        sio.connect('http://127.0.0.1:8888/backend')
+        return sio
 
     def send_to_socket(self,message):
         self.sio.emit(json.dumps({
