@@ -63,64 +63,80 @@ class BackEnd(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
       return True
 
-    def remove_configlets(self, client, device, lab_configlets):
+    def connect_to_cvp(self,access_info):
+            # Adding new connection to CVP via rcvpapi
+            cvp_clnt = ''
+            for c_login in access_info['login_info']['cvp']['shell']:
+                if c_login['user'] == 'arista':
+                    while not cvp_clnt:
+                        try:
+                            cvp_clnt = CVPCON(access_info['nodes']['cvp'][0]['internal_ip'],c_login['user'],c_login['pw'])
+                            self.send_to_syslog("OK","Connected to CVP at {0}".format(access_info['nodes']['cvp'][0]['internal_ip']))
+                            return cvp_clnt
+                        except:
+                            self.send_to_syslog("ERROR", "CVP is currently unavailable....Retrying in 30 seconds.")
+                            time.sleep(30)
+
+    def remove_configlets(self,device,lab_configlets):
         """
-        Removes all configlets except the ones defined here or starting with SYS_
+        Removes all configlets except the ones defined as 'base'
         Define base configlets that are to be untouched
-        mext = lab type to keep track of which base configlets to keep.  Added for RATD and RATD-Ring
         """
         base_configlets = ['ATD-INFRA']
         
         configlets_to_remove = []
         configlets_to_remain = base_configlets
 
-        configlets = client.getConfigletsByNetElementId(device)
+        configlets = self.client.getConfigletsByNetElementId(device)
         for configlet in configlets['configletList']:
-            if configlet['name'] not in base_configlets or configlet['name'] not in lab_configlets:
-                configlets_to_remove.append(configlet['name'])
-                self.send_to_syslog("INFO", "Configlet {0} not part of base on {1} - Removing from device".format(configlet['name'], device.hostname))
-            elif configlet['name'] in base_configlets:
+            if configlet['name'] in base_configlets:
                 configlets_to_remain.append(configlet['name'])
                 self.send_to_syslog("INFO", "Configlet {0} is part of the base on {1} - Configlet will remain.".format(configlet['name'], device.hostname))
+            elif configlet['name'] not in lab_configlets:
+                configlets_to_remove.append(configlet['name'])
+                self.send_to_syslog("INFO", "Configlet {0} not part of lab configlets on {1} - Removing from device".format(configlet['name'], device.hostname))
             else:
                 pass
-        device.removeConfiglets(client, configlets_to_remove)
-        client.addDeviceConfiglets(device, configlets_to_remain)
-        client.applyConfiglets(device)
+        if len(configlets_to_remain) > 0:
+            device.removeConfiglets(self.client,configlets_to_remove)
+            self.client.addDeviceConfiglets(device, configlets_to_remain)
+            self.client.applyConfiglets(device)
+        else:
+            pass
 
-    def get_device_info(self, client):
+    def get_device_info(self):
         eos_devices = []
-        for dev in client.inventory:
-            tmp_eos = client.inventory[dev]
+        for dev in self.client.inventory:
+            tmp_eos = self.client.inventory[dev]
             tmp_eos_sw = CVPSWITCH(dev, tmp_eos['ipAddress'])
-            tmp_eos_sw.updateDevice(client)
+            tmp_eos_sw.updateDevice(self.client)
             eos_devices.append(tmp_eos_sw)
         return(eos_devices)
 
 
-    def update_topology(self, client, lab, configlets):
+    def update_topology(self,configlets):
         # Get all the devices in CVP
-        devices = self.get_device_info(client)
+        devices = self.get_device_info()
         # Loop through all devices
-        # for device in devices:
+        
         for device in devices:
             # Get the actual name of the device
             device_name = device.hostname
             
             # Define a list of configlets built off of the lab yaml file
             lab_configlets = []
-            for configlet_name in configlets[lab][device_name]:
+            for configlet_name in configlets[self.selected_lab][device_name]:
                 lab_configlets.append(configlet_name)
 
             # Remove unnecessary configlets
-            self.remove_configlets(client, device, lab_configlets)
+            self.remove_configlets(device, lab_configlets)
 
             # Apply the configlets to the device
-            client.addDeviceConfiglets(device, lab_configlets)
-            client.applyConfiglets(device)
+            self.client.addDeviceConfiglets(device, lab_configlets)
+            self.client.applyConfiglets(device)
 
         # Perform a single Save Topology by default
-        client.saveTopology()
+        self.client.saveTopology()
 
     def send_to_syslog(self,mstat,mtype):
         """
@@ -130,17 +146,38 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         mtype = Message to be sent/displayed (required)
         """
         mmes = "\t" + mtype
-        logging.info("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
+        syslog.syslog("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
         if DEBUG:
             print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
 
-    def send_to_socket(self,message):
-        self.status = message
-        self.write_message(json.dumps({
-            'type': 'serverData',
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': message
-        }))
+
+    def push_bare_config(self,veos_host, veos_ip, veos_config):
+        """
+        Pushes a bare config to the EOS device.
+        """
+        # Write config to tmp file
+        device_config = "/tmp/" + veos_host + ".cfg"
+        with open(device_config,"a") as tmp_config:
+            tmp_config.write(veos_config)
+
+        DEVREBOOT = False
+        veos_ssh = paramiko.SSHClient()
+        veos_ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        veos_ssh.connect(hostname=veos_ip, username="root", password="", port="50001")
+        scp = SCPClient(veos_ssh.get_transport())
+        scp.put(device_config,remote_path="/mnt/flash/startup-config")
+        scp.close()
+        veos_ssh.exec_command('FastCli -c "{0}"'.format(cp_start_run))
+        veos_ssh.exec_command('FastCli -c "{0}"'.format(cp_run_start))
+        stdin, stdout, stderr = veos_ssh.exec_command('FastCli -c "{0}"'.format(ztp_cmds))
+        ztp_out = stdout.readlines()
+        if 'Active' in ztp_out[0]:
+            DEVREBOOT = True
+            self.send_to_syslog("INFO", "Rebooting {0}...This will take a couple minutes to come back up".format(veos_host))
+            #veos_ssh.exec_command("/sbin/reboot -f > /dev/null 2>&1 &")
+            veos_ssh.exec_command('FastCli -c "{0}"'.format(ztp_cancel))
+        veos_ssh.close()
+        return(DEVREBOOT)
 
     def deploy_lab(self,selected_menu,selected_lab):
 

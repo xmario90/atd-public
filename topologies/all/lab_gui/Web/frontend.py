@@ -15,7 +15,7 @@ class FrontEnd(tornado.web.RequestHandler):
       for menu_item in os.listdir('../menus'):
         if menu_item != 'default.yaml':
           menus_dict[menu_item.replace('.yaml', '')] = []
-          menu_file = open('../menus/{0}'.format(menu_item))
+          menu_file = open('/home/arista/menus/{0}'.format(menu_item))
           menu_items = YAML().load(menu_file)
           for lab_item in menu_items['lab_list']:
             menus_dict[menu_item.replace('.yaml', '')].append(lab_item)
