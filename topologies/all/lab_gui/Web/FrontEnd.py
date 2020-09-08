@@ -10,9 +10,9 @@ import requests
 
 class FrontEnd(tornado.web.RequestHandler):
     def _get_menus(self):
-      menu_list = [x for x in os.listdir('../menus')]
+      menu_list = [x for x in os.listdir('/home/arista/menus')]
       menus_dict = {}
-      for menu_item in os.listdir('../menus'):
+      for menu_item in os.listdir('/home/arista/menus'):
         if menu_item != 'default.yaml':
           menus_dict[menu_item.replace('.yaml', '')] = []
           menu_file = open('/home/arista/menus/{0}'.format(menu_item))

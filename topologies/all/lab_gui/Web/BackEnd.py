@@ -178,6 +178,14 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         veos_ssh.close()
         return(DEVREBOOT)
 
+    def send_to_socket(self,message):
+        self.status = message
+        self.write_message(json.dumps({
+            'type': 'serverData',
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'status': message
+        }))
+
     def deploy_lab(self,selected_menu,selected_lab):
 
         # Check for additional commands in lab yaml file
