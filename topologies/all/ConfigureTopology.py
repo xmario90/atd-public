@@ -60,7 +60,7 @@ class WebSocketClient(object):
             self.send_to_syslog("OK", "Connected to web socket.")
 
     def schedule_update(self):
-        self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
+        self.timeout = IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
           
     def keep_alive(self):
         try:
