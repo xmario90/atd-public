@@ -45,20 +45,20 @@ class WebSocketClient(object):
         self.ioloop.start()
 
     def connect(self):
-        print "trying to connect"
+        print("trying to connect")
         try:
             self.ws = yield websocket_connect(self.url)
         except Exception, e:
-            print "connection error"
+            print("connection error")
         else:
-            print "connected"
+            print("connected")
             self.run()
 
     def run(self):
         while True:
             msg = yield self.ws.read_message()
             if msg is None:
-                print "connection closed"
+                print("connection closed")
                 self.ws = None
                 break
 
