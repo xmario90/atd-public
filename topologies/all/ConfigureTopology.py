@@ -9,6 +9,7 @@ from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+from tornado.ioloop import IOLoop
 from tornado.websocket import websocket_connect
 
 
@@ -32,6 +33,45 @@ ztp_cancel = """enable
 zerotouch cancel
 """
 
+from tornado.ioloop import IOLoop, PeriodicCallback
+from tornado import gen
+from tornado.websocket import websocket_connect
+
+
+class WebSocketClient(object):
+
+    def __init__(self, url, timeout):
+        self.url = url
+        self.timeout = timeout
+        self.ioloop = IOLoop.instance()
+        self.ws = None
+        self.connect()
+        PeriodicCallback(self.keep_alive, 20000).start()
+        self.ioloop.start()
+
+    @gen.coroutine
+    def connect(self):
+        print("trying to connect")
+        try:
+            self.ws = yield websocket_connect(self.url)
+        except Exception, e:
+            print("connection error")
+        else:
+            print("connected")
+
+    def schedule_update(self):
+        self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
+          
+    def keepalive(self):
+        try:
+            self.write_message(json.dumps({
+                'type': 'keepalive',
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'data': 'ping'
+            }))
+        finally:
+            self.schedule_update()
+
 # Create class to handle configuring the topology
 class ConfigureTopology():
 
@@ -43,7 +83,7 @@ class ConfigureTopology():
         self.deploy_lab()
         
     def connect_to_websocket(self):
-        ws = websocket_connect('ws://127.0.0.1:8888/backend')
+        ws = WebSocketClient('ws://127.0.0.1:8888/backend', 5)
         ws.write_message(json.dumps({
             'type': 'serverData',
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
