@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import tornado.ioloop
 import asyncio
+import sys
+sys.path.append("./lab_gui")
 
 # Import frontend and backend files
 from lab_gui.Web.BackEnd import BackEnd
