@@ -7,6 +7,7 @@ import tornado.websocket
 from datetime import timedelta, datetime, timezone, date
 from ruamel.yaml import YAML
 from ConfigureTopology.ConfigureTopology import ConfigureTopology
+import syslog
 
 DEBUG = False
 

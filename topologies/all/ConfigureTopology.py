@@ -2,6 +2,7 @@
 
 from rcvpapi.rcvpapi import *
 import syslog, time
+import sys
 from datetime import timedelta, datetime, timezone, date
 from ruamel.yaml import YAML
 import paramiko
@@ -9,8 +10,8 @@ from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-import socket
-
+sys.path.append("./lab_gui")
+from Web.BackEnd import Backend
 
 
 
@@ -40,20 +41,8 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
-        self.ws = self.connect_to_websocket()
+        self.ws = Backend()
         self.deploy_lab()
-        
-    def connect_to_websocket(self):
-        client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        client.connect(('127.0.0.1', 8888))
-        return client
-
-    def send_to_socket(self,message):
-        self.ws.send(json.dumps({
-            'type': 'serverData',
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': message
-        }))
         
     def connect_to_cvp(self,access_info):
         # Adding new connection to CVP via rcvpapi
@@ -63,7 +52,7 @@ class ConfigureTopology():
                 while not cvp_clnt:
                     try:
                         cvp_clnt = CVPCON(access_info['nodes']['cvp'][0]['internal_ip'],c_login['user'],c_login['pw'])
-                        self.send_to_socket('Connected to CVP')
+                        self.ws.send_to_socket('Test')
                         self.send_to_syslog("OK","Connected to CVP at {0}".format(access_info['nodes']['cvp'][0]['internal_ip']))
                         return cvp_clnt
                     except:
