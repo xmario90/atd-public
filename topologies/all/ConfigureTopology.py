@@ -9,7 +9,7 @@ from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-import socketio
+import socket
 
 
 
@@ -40,13 +40,13 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
-        self.sio = self.connect_to_websocket()
+        self.socket = self.connect_to_websocket()
         self.deploy_lab()
         
     def connect_to_websocket(self):
-        sio = socketio.Client()
-        sio.connect('http://127.0.0.1:8888/backend')
-        return sio
+        socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        socket.connect('127.0.0.1', 8888)
+        return socket
 
     def send_to_socket(self,message):
         self.sio.emit(json.dumps({
