@@ -6,3 +6,4 @@ serviceUpdaters:
   - cvpUpdater
   - sslUpdater
   - labModule
+  - labGui

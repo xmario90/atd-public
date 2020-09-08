@@ -1,0 +1,13 @@
+[Unit]
+Description=Runs Lab Options GUI
+After=atdFiles.service
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/lab_gui/lab_gui.py
+TimeoutStartSec=infinity
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
