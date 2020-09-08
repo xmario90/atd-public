@@ -113,29 +113,29 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         return(eos_devices)
 
 
-    def update_topology(self,configlets):
+    def update_topology(self, client, lab, configlets):
         # Get all the devices in CVP
-        devices = self.get_device_info()
+        devices = self.get_device_info(client)
         # Loop through all devices
-        
+        # for device in devices:
         for device in devices:
             # Get the actual name of the device
             device_name = device.hostname
             
             # Define a list of configlets built off of the lab yaml file
             lab_configlets = []
-            for configlet_name in configlets[self.selected_lab][device_name]:
+            for configlet_name in configlets[lab][device_name]:
                 lab_configlets.append(configlet_name)
 
             # Remove unnecessary configlets
-            self.remove_configlets(device, lab_configlets)
+            self.remove_configlets(client, device, lab_configlets)
 
             # Apply the configlets to the device
-            self.client.addDeviceConfiglets(device, lab_configlets)
-            self.client.applyConfiglets(device)
+            client.addDeviceConfiglets(device, lab_configlets)
+            client.applyConfiglets(device)
 
         # Perform a single Save Topology by default
-        self.client.saveTopology()
+        client.saveTopology()
 
     def send_to_syslog(self,mstat,mtype):
         """
