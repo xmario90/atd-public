@@ -45,11 +45,11 @@ class ConfigureTopology():
         
     def connect_to_websocket(self):
         client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        client.connect('127.0.0.1', 8888)
+        client.connect(('127.0.0.1', 8888))
         return client
 
     def send_to_socket(self,message):
-        self.sio.emit(json.dumps({
+        self.ws.send(json.dumps({
             'type': 'serverData',
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'status': message

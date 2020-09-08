@@ -25,16 +25,19 @@ class BackEnd(tornado.websocket.WebSocketHandler):
             pass
         elif data['type'] == 'clientData':
             ConfigureTopology(selected_menu=data['selectedMenu'],selected_lab=data['selectedLab'])
-        elif data['type'] == 'getStatus':
-            self.send_status()
 
-    def send_status(self):
-        self.write_message(json.dumps({
-            'type': 'serverData',
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': self.status
-        }))
 
+    def send_to_syslog(self,mstat,mtype):
+        """
+        Function to send output from service file to Syslog
+        Parameters:
+        mstat = Message Status, ie "OK", "INFO" (required)
+        mtype = Message to be sent/displayed (required)
+        """
+        mmes = "\t" + mtype
+        syslog.syslog("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
+        if DEBUG:
+            print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
 
     def schedule_update(self):
         self.timeout = tornado.ioloop.IOLoop.instance().add_timeout(timedelta(seconds=60),self.keepalive)
