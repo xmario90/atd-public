@@ -40,7 +40,7 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
-        self.sio = connect_to_websocket()
+        self.sio = self.connect_to_websocket()
         self.deploy_lab()
         
     def connect_to_websocket(self):
@@ -63,6 +63,7 @@ class ConfigureTopology():
                 while not cvp_clnt:
                     try:
                         cvp_clnt = CVPCON(access_info['nodes']['cvp'][0]['internal_ip'],c_login['user'],c_login['pw'])
+                        self.send_to_socket('Connected to CVP')
                         self.send_to_syslog("OK","Connected to CVP at {0}".format(access_info['nodes']['cvp'][0]['internal_ip']))
                         return cvp_clnt
                     except:
