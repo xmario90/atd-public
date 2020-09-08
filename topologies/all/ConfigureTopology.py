@@ -40,13 +40,13 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
-        self.socket = self.connect_to_websocket()
+        self.ws = self.connect_to_websocket()
         self.deploy_lab()
         
     def connect_to_websocket(self):
-        socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        socket.connect('127.0.0.1', 8888)
-        return socket
+        client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        client.connect('127.0.0.1', 8888)
+        return client
 
     def send_to_socket(self,message):
         self.sio.emit(json.dumps({
