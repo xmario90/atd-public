@@ -8,6 +8,12 @@ from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+from tornado.ioloop import IOLoop, PeriodicCallback
+from tornado import gen
+from tornado.websocket import websocket_connect
+
+
+
 
 
 DEBUG = False
@@ -28,6 +34,41 @@ ztp_cancel = """enable
 zerotouch cancel
 """
 
+class WebSocketClient(object):
+    def __init__(self, url, timeout):
+        self.url = url
+        self.timeout = timeout
+        self.ioloop = IOLoop.instance()
+        self.ws = None
+        self.connect()
+	    PeriodicCallback(self.keep_alive, 20000).start()
+        self.ioloop.start()
+
+    def connect(self):
+        print "trying to connect"
+        try:
+            self.ws = yield websocket_connect(self.url)
+        except Exception, e:
+            print "connection error"
+        else:
+            print "connected"
+            self.run()
+
+    def run(self):
+        while True:
+            msg = yield self.ws.read_message()
+            if msg is None:
+                print "connection closed"
+                self.ws = None
+                break
+
+    def keep_alive(self):
+        if self.ws is None:
+            self.connect()
+        else:
+            self.ws.write_message("keep alive")
+
+
 # Create class to handle configuring the topology
 class ConfigureTopology():
 
@@ -35,6 +76,7 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
+        self.websocket = WebSocketClient("ws://127.0.0.1:8888/backend", 5)
         self.deploy_lab()
 
     def connect_to_cvp(self,access_info):
@@ -77,6 +119,14 @@ class ConfigureTopology():
             self.client.applyConfiglets(device)
         else:
             pass
+
+    def send_to_socket(self,message):
+        self.status = message
+        self.write_message(json.dumps({
+            'type': 'serverData',
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'status': message
+        }))
 
     def get_device_info(self):
         eos_devices = []
@@ -246,4 +296,7 @@ class ConfigureTopology():
                     for command in additional_commands:
                         os.system(command)
 
-                input("Lab Setup Completed. Please press Enter to continue...")
+                    if not self.public_module_flag:
+                        input('Lab Setup Completed. Please press Enter to continue...')
+                    else:
+                        self.send_to_syslog("OK", 'Lab Setup Completed.')
