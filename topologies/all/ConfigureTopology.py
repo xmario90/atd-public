@@ -41,7 +41,7 @@ class WebSocketClient(object):
         self.ioloop = IOLoop.instance()
         self.ws = None
         self.connect()
-	    PeriodicCallback(self.keep_alive, 20000).start()
+        PeriodicCallback(self.keep_alive, 20000).start()
         self.ioloop.start()
 
     def connect(self):
