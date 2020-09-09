@@ -44,13 +44,18 @@ class ConfigureTopology():
         self.close_websocket()
         
     def create_websocket(self):
-        ws = create_connection("ws://127.0.0.1:8888/backend")
-        ws.send(json.dumps({
-                'type': 'openMessage',
-                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'status': 'ConfigureTopology Opened.'
-            }))
-        return ws
+        self.send_to_syslog("INFO", "Connecting to web socket.")
+        try:
+            ws = create_connection("ws://127.0.0.1:8888/backend")
+            ws.send(json.dumps({
+                    'type': 'openMessage',
+                    'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    'status': 'ConfigureTopology Opened.'
+                }))
+            self.send_to_syslog("OK", "Connected to web socket for ConfigureTopology.")
+            return ws
+        except:
+            self.send_to_syslog("ERROR", "ConfigureTopology cannot connect to web socket.")
 
     def close_websocket(self):
         self.ws.send(json.dumps({
