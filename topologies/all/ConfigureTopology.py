@@ -39,12 +39,14 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         if socket != None
             self.socket = socket
+            ws.name = 'Provided'
         else self.socket = self.create_websocket()
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
         self.ws = self.create_websocket()
         self.deploy_lab()
-        self.close_websocket()
+        if socket != None:
+            self.close_websocket()
         
     def create_websocket(self):
         
@@ -58,6 +60,7 @@ class ConfigureTopology():
                     'status': 'ConfigureTopology Opened.'
                 }))
             self.send_to_syslog("OK", "Connected to web socket for ConfigureTopology.")
+            ws.name = 'ConfigureTopology'
             return ws
         except:
             self.send_to_syslog("ERROR", "ConfigureTopology cannot connect to web socket.")
@@ -71,11 +74,14 @@ class ConfigureTopology():
         self.ws.close()
 
     def send_to_socket(self,message):
-        self.ws.send(json.dumps({
-            'type': 'serverData',
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': message
-        }))  
+        if ws.name == 'Provided':
+            ws.send_to_socket(message)
+        else:
+            self.ws.send(json.dumps({
+                'type': 'serverData',
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'status': message
+            }))  
 
     def connect_to_cvp(self,access_info):
         # Adding new connection to CVP via rcvpapi
