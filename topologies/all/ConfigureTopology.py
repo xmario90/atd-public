@@ -53,7 +53,7 @@ class ConfigureTopology():
         return ws
 
     def close_websocket(self):
-        ws.send(json.dumps({
+        self.ws.send(json.dumps({
                 'type': 'closeMessage',
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'status': 'ConfigureTopology Closing.'
@@ -78,9 +78,11 @@ class ConfigureTopology():
                         self.send_to_socket('Connected to CVP')
                         self.send_to_syslog("OK","Connected to CVP at {0}".format(access_info['nodes']['cvp'][0]['internal_ip']))
                         return cvp_clnt
-                    except:
+                    except Exception as error:
+                        print(error)
                         self.send_to_syslog("ERROR", "CVP is currently unavailable....Retrying in 30 seconds.")
                         time.sleep(30)
+
 
     def remove_configlets(self,device,lab_configlets):
         """

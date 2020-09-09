@@ -1,5 +1,5 @@
 [Unit]
-Description=Runs Lab Options GUI
+Description=Lab Options GUI
 After=atdFiles.service
 
 [Service]
