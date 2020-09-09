@@ -45,12 +45,14 @@ class ConfigureTopology():
         self.close_websocket()
         
     def create_websocket(self):
-        self.send_to_syslog("INFO", "Connecting to web socket.")
+        
         try:
             if self.socket_url == '':
+                self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format("ws://127.0.0.1:8888/backend"))
                 ws = create_connection("ws://127.0.0.1:8888/backend")
             else:
-                ws = create_connection(self.socket_url)
+                self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format(self.socket_url.replace('/backend', ':8888/backend')))
+                ws = create_connection(self.socket_url.replace('/backend', ':8888/backend'))
             ws.send(json.dumps({
                     'type': 'openMessage',
                     'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
