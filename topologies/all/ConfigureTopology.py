@@ -94,12 +94,21 @@ class ConfigureTopology():
         self.public_module_flag = public_module_flag
         self.ws = self.create_websocket()
         self.deploy_lab()
-        self.ws.close()
+        self.close_websocket()
         
     def create_websocket(self):
         ws = create_connection("ws://127.0.0.1:8888/backend")
         ws.send(json.dumps(json.dumps({
                 'type': 'openMessage',
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'status': 'ConfigureTopology Connecting.'
+            })))
+        return ws
+
+    def close_websocket(self):
+        ws = create_connection("ws://127.0.0.1:8888/backend")
+        ws.send(json.dumps(json.dumps({
+                'type': 'closeMessage',
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'status': 'ConfigureTopology Connecting.'
             })))

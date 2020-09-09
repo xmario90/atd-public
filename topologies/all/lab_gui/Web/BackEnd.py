@@ -17,13 +17,20 @@ class BackEnd(tornado.websocket.WebSocketHandler):
 
     def open(self):
         self.connections.add(self)
+        print(vars(self))
         self.send_to_syslog('OK', 'Connection opened from {0}'.format(self.request.remote_ip))
         self.schedule_update()
+
+    def close(self):
+        self.connections.remove(self)
+        self.send_to_syslog('INFO', 'Connection closed from {0}'.format(self.request.remote_ip))
 
     def on_message(self, message):
         data = json.loads(message)
         self.send_to_syslog("INFO", 'Received message {0} in socket.'.format(message))
         if data['type'] == 'openMessage':
+            pass
+        elif data['type'] == 'serverData':
             pass
         elif data['type'] == 'clientData':
             ConfigureTopology(selected_menu=data['selectedMenu'],selected_lab=data['selectedLab'])
