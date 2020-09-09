@@ -40,6 +40,10 @@ class ConfigureTopology():
         if socket != None:
             self.ws = socket
             self.ws.name = 'Provided'
+            try:
+                self.send_to_socket('ConfigureTopology connected to backend socket.')
+            except:
+                self.send_to_syslog('Error connected to backend socket.')
         else:
             self.ws = self.create_websocket()
         self.selected_lab = selected_lab
