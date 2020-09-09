@@ -53,7 +53,7 @@ class ConfigureTopology():
         try:
             url = "ws://127.0.0.1:8888/backend"
             self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format(url))
-            ws = create_connection("ws://127.0.0.1:8888/backend")
+            ws = create_connection(url)
             ws.send(json.dumps({
                 'type': 'openMessage',
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -74,8 +74,8 @@ class ConfigureTopology():
         self.ws.close()
 
     def send_to_socket(self,message):
-        if ws.name == 'Provided':
-            ws.send_to_socket(message)
+        if self.ws.name == 'Provided':
+            self.ws.send_to_socket(message)
         else:
             self.ws.send(json.dumps({
                 'type': 'serverData',
