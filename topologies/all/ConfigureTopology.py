@@ -9,8 +9,10 @@ from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-from tornado.ioloop import IOLoop
-from tornado.websocket import websocket_connect
+import websockets
+import asyncio
+# from tornado.ioloop import IOLoop
+# from tornado.websocket import websocket_connect
 
 
 
@@ -33,56 +35,56 @@ ztp_cancel = """enable
 zerotouch cancel
 """
 
-from tornado.ioloop import IOLoop, PeriodicCallback
-from tornado import gen
-from tornado.websocket import websocket_connect
+# from tornado.ioloop import IOLoop, PeriodicCallback
+# from tornado import gen
+# from tornado.websocket import websocket_connect
 
 
-class WebSocketClient(object):
+# class WebSocketClient(object):
 
-    def __init__(self, url, timeout):
-        self.url = url
-        self.timeout = timeout
-        self.ioloop = IOLoop.instance()
-        self.ws = None
-        self.connect()
-        PeriodicCallback(self.keep_alive, 20000).start()
-        self.ioloop.start()
+#     def __init__(self, url, timeout):
+#         self.url = url
+#         self.timeout = timeout
+#         self.ioloop = IOLoop.instance()
+#         self.ws = None
+#         self.connect()
+#         PeriodicCallback(self.keep_alive, 20000).start()
+#         self.ioloop.start()
 
-    @gen.coroutine
-    def connect(self):
-        self.send_to_syslog("INFO", "Trying to connect to web socket.")
-        try:
-            self.ws = yield websocket_connect(self.url)
-        except Exception as e:
-            self.send_to_syslog("ERROR", "Cannot connect to web socket.")
-        else:
-            self.send_to_syslog("OK", "Connected to web socket.")
+#     @gen.coroutine
+#     def connect(self):
+#         self.send_to_syslog("INFO", "Trying to connect to web socket.")
+#         try:
+#             self.ws = yield websocket_connect(self.url)
+#         except Exception as e:
+#             self.send_to_syslog("ERROR", "Cannot connect to web socket.")
+#         else:
+#             self.send_to_syslog("OK", "Connected to web socket.")
 
-    def schedule_update(self):
-        self.timeout = IOLoop.instance().add_timeout(timedelta(seconds=60),self.keep_alive)
+#     def schedule_update(self):
+#         self.timeout = IOLoop.instance().add_timeout(timedelta(seconds=60),self.keep_alive)
           
-    def keep_alive(self):
-        try:
-            self.ws.write_message(json.dumps({
-                'type': 'keepalive',
-                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'data': 'ping'
-            }))
-        finally:
-            self.schedule_update()
+#     def keep_alive(self):
+#         try:
+#             self.ws.write_message(json.dumps({
+#                 'type': 'keepalive',
+#                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+#                 'data': 'ping'
+#             }))
+#         finally:
+#             self.schedule_update()
 
-    def send_to_syslog(self,mstat,mtype):
-        """
-        Function to send output from service file to Syslog
-        Parameters:
-        mstat = Message Status, ie "OK", "INFO" (required)
-        mtype = Message to be sent/displayed (required)
-        """
-        mmes = "\t" + mtype
-        syslog.syslog("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
-        if DEBUG:
-            print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
+#     def send_to_syslog(self,mstat,mtype):
+#         """
+#         Function to send output from service file to Syslog
+#         Parameters:
+#         mstat = Message Status, ie "OK", "INFO" (required)
+#         mtype = Message to be sent/displayed (required)
+#         """
+#         mmes = "\t" + mtype
+#         syslog.syslog("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
+#         if DEBUG:
+#             print("[{0}] {1}".format(mstat,mmes.expandtabs(7 - len(mstat))))
 
 # Create class to handle configuring the topology
 class ConfigureTopology():
@@ -95,15 +97,15 @@ class ConfigureTopology():
         self.deploy_lab()
         
     def connect_to_websocket(self):
-        ws = WebSocketClient('ws://127.0.0.1:8888/backend', 5)
-        return ws
+    ws = websockets.connect('ws://127.0.0.1:8888/backend'
+        websocket.send("ConfigureTopology Connected.")
 
-    def send_to_socket(self,message):
-        self.ws.write_message(json.dumps({
-            'type': 'serverData',
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': message
-        }))  
+    # def send_to_socket(self,message):
+    #     self.ws.write_message(json.dumps({
+    #         'type': 'serverData',
+    #         'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    #         'status': message
+    #     }))  
 
     def connect_to_cvp(self,access_info):
         # Adding new connection to CVP via rcvpapi
