@@ -227,7 +227,7 @@ class ConfigureTopology():
 
         # Send message that deployment is beginning
         print("Starting deployment for {0} - {1} lab...".format(self.selected_menu,self.selected_lab))
-        self.send_to_socket("Starting deployment for {0} - {1} lab...".format(self.selected_menu,self.selected_lab)
+        self.send_to_socket("Starting deployment for {0} - {1} lab...".format(self.selected_menu,self.selected_lab))
         # Check if the topo has CVP, and if it does, create CVP connection
         if 'cvp' in access_info['nodes']:
             self.client = self.connect_to_cvp(access_info)
