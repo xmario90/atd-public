@@ -36,7 +36,7 @@ apt install python3-pip nodejs -y
 
 # Install python3 modules
 pip3 install --upgrade pip
-pip3 install ruamel.yaml bs4 tornado scp paramiko rcvpapi
+pip3 install ruamel.yaml bs4 tornado scp paramiko rcvpapi websocket
 
 # Setup NPM and webssh2
 npm install forever -g
