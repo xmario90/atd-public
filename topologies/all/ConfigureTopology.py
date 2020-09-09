@@ -93,19 +93,24 @@ class ConfigureTopology():
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
         self.ws = self.create_websocket()
-        asyncio.run(self.ws)
         self.deploy_lab()
+        self.ws.close()
         
     def create_websocket(self):
         ws = create_connection("ws://127.0.0.1:8888/backend")
-            ws.send("ConfigureTopology Connected.")
+        ws.send(json.dumps(json.dumps({
+                'type': 'openMessage',
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'status': 'ConfigureTopology Connecting.'
+            })))
+        return ws
 
-    # def send_to_socket(self,message):
-    #     self.ws.write_message(json.dumps({
-    #         'type': 'serverData',
-    #         'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    #         'status': message
-    #     }))  
+    def send_to_socket(self,message):
+        self.ws.write_message(json.dumps({
+            'type': 'serverData',
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'status': message
+        }))  
 
     def connect_to_cvp(self,access_info):
         # Adding new connection to CVP via rcvpapi
