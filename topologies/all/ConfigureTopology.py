@@ -271,6 +271,7 @@ class ConfigureTopology():
                     if not self.bypass_input_flag:
                         input('Lab Setup Completed. Please press Enter to continue...')
                     else:
+                        self.send_to_socket('Lab Setup Completed.')
                         self.send_to_syslog("OK", 'Lab Setup Completed.')
                     all_tasks_completed = True
                 else:
@@ -304,7 +305,7 @@ class ConfigureTopology():
                     for command in additional_commands:
                         os.system(command)
 
-                    if not self.public_module_flag:
+                    if not self.bypass_input:
                         input('Lab Setup Completed. Please press Enter to continue...')
                     else:
                         self.send_to_syslog("OK", 'Lab Setup Completed.')
