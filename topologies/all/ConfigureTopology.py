@@ -101,18 +101,17 @@ class ConfigureTopology():
         ws.send(json.dumps(json.dumps({
                 'type': 'openMessage',
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'status': 'ConfigureTopology Connecting.'
+                'status': 'ConfigureTopology Opened.'
             })))
         return ws
 
     def close_websocket(self):
-        ws = create_connection("ws://127.0.0.1:8888/backend")
         ws.send(json.dumps(json.dumps({
                 'type': 'closeMessage',
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'status': 'ConfigureTopology Connecting.'
+                'status': 'ConfigureTopology Closing.'
             })))
-        return ws
+        self.ws.close()
 
     def send_to_socket(self,message):
         self.ws.write_message(json.dumps({
