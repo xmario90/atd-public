@@ -47,7 +47,7 @@ class ConfigureTopology():
     def create_websocket(self):
         self.send_to_syslog("INFO", "Connecting to web socket.")
         try:
-            if self.socket_url = '':
+            if self.socket_url == '':
                 ws = create_connection("ws://127.0.0.1:8888/backend")
             else:
                 ws = create_connection(self.socket_url)
