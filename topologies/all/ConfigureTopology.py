@@ -111,14 +111,6 @@ class ConfigureTopology():
         else:
             pass
 
-    def send_to_socket(self,message):
-        self.status = message
-        self.write_message(json.dumps({
-            'type': 'serverData',
-            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'status': message
-        }))
-
     def get_device_info(self):
         eos_devices = []
         for dev in self.client.inventory:
