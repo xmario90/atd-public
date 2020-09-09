@@ -93,10 +93,11 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
-        self.ws = self.connect_to_websocket()
+        self.ws = self.create_websocket()
+        asyncio.run(create_websocket())
         self.deploy_lab()
         
-    asybc def create_websocket(self):
+    async def create_websocket(self):
         async with websockets.connect('ws://127.0.0.1:8888/backend') as ws:
             await ws.send("ConfigureTopology Connected.")
             return ws
