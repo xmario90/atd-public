@@ -31,7 +31,7 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         elif data['type'] == 'serverData':
             pass
         elif data['type'] == 'clientData':
-            ConfigureTopology(selected_menu=data['selectedMenu'],selected_lab=data['selectedLab'],socket=self)
+            ConfigureTopology(selected_menu=data['selectedMenu'],selected_lab=data['selectedLab'],bypass_input=True,socket=self)
 
 
     def send_to_syslog(self,mstat,mtype):
