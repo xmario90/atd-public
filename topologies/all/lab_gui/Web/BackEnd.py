@@ -13,7 +13,6 @@ DEBUG = False
 
 class BackEnd(tornado.websocket.WebSocketHandler):
     connections = set()
-    status = ''
 
     def open(self):
         self.connections.add(self)
@@ -67,7 +66,7 @@ class BackEnd(tornado.websocket.WebSocketHandler):
       return True
 
     def send_to_socket(self,message):
-        self.status = message
+        self.send_to_syslog("INFO", "Sending message: {0} to socket.".format(message))
         self.write_message(json.dumps({
             'type': 'serverData',
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
