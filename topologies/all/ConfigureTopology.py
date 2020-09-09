@@ -35,9 +35,11 @@ zerotouch cancel
 # Create class to handle configuring the topology
 class ConfigureTopology():
 
-    def __init__(self,selected_menu,selected_lab,public_module_flag=False,socket_url=''):
+    def __init__(self,selected_menu,selected_lab,public_module_flag=False,socket=None):
         self.selected_menu = selected_menu
-        self.socket_url = socket_url
+        if socket != None
+            self.socket = socket
+        else self.socket = self.create_websocket()
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
         self.ws = self.create_websocket()
@@ -47,12 +49,9 @@ class ConfigureTopology():
     def create_websocket(self):
         
         try:
-            if self.socket_url == '':
-                self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format("ws://127.0.0.1:8888/backend"))
+                url = "ws://127.0.0.1:8888/backend"
+                self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format(url))
                 ws = create_connection("ws://127.0.0.1:8888/backend")
-            else:
-                self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format(self.socket_url.replace('/backend', ':8888/backend')))
-                ws = create_connection(self.socket_url.replace('/backend', ':8888/backend'))
             ws.send(json.dumps({
                     'type': 'openMessage',
                     'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
