@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 from rcvpapi.rcvpapi import *
 import syslog, time
