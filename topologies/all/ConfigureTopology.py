@@ -38,12 +38,12 @@ class ConfigureTopology():
     def __init__(self,selected_menu,selected_lab,public_module_flag=False,socket=None):
         self.selected_menu = selected_menu
         if socket != None:
-            self.socket = socket
+            self.ws = socket
             ws.name = 'Provided'
-        else self.socket = self.create_websocket()
+        else:
+            self.ws = self.create_websocket()
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
-        self.ws = self.create_websocket()
         self.deploy_lab()
         if socket != None:
             self.close_websocket()
@@ -51,14 +51,14 @@ class ConfigureTopology():
     def create_websocket(self):
         
         try:
-                url = "ws://127.0.0.1:8888/backend"
-                self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format(url))
-                ws = create_connection("ws://127.0.0.1:8888/backend")
+            url = "ws://127.0.0.1:8888/backend"
+            self.send_to_syslog("INFO", "Connecting to web socket on {0}.".format(url))
+            ws = create_connection("ws://127.0.0.1:8888/backend")
             ws.send(json.dumps({
-                    'type': 'openMessage',
-                    'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    'status': 'ConfigureTopology Opened.'
-                }))
+                'type': 'openMessage',
+                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'status': 'ConfigureTopology Opened.'
+            }))
             self.send_to_syslog("OK", "Connected to web socket for ConfigureTopology.")
             ws.name = 'ConfigureTopology'
             return ws
