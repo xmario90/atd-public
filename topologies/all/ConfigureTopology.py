@@ -37,7 +37,7 @@ class ConfigureTopology():
 
     def __init__(self,selected_menu,selected_lab,public_module_flag=False,socket=None):
         self.selected_menu = selected_menu
-        if socket != None
+        if socket != None:
             self.socket = socket
             ws.name = 'Provided'
         else self.socket = self.create_websocket()
