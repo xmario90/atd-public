@@ -106,15 +106,15 @@ class ConfigureTopology():
         return ws
 
     def close_websocket(self):
-        ws.send(json.dumps(json.dumps({
+        ws.send(json.dumps({
                 'type': 'closeMessage',
                 'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'status': 'ConfigureTopology Closing.'
-            })))
+            }))
         self.ws.close()
 
     def send_to_socket(self,message):
-        self.ws.write_message(json.dumps({
+        self.ws.send(json.dumps({
             'type': 'serverData',
             'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'status': message
