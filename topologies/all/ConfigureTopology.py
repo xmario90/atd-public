@@ -9,8 +9,7 @@ from scp import SCPClient
 import os
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-import websockets
-import asyncio
+from websocket import create_connection
 # from tornado.ioloop import IOLoop
 # from tornado.websocket import websocket_connect
 
@@ -94,13 +93,12 @@ class ConfigureTopology():
         self.selected_lab = selected_lab
         self.public_module_flag = public_module_flag
         self.ws = self.create_websocket()
-        asyncio.run(create_websocket())
+        asyncio.run(self.ws)
         self.deploy_lab()
         
-    async def create_websocket(self):
-        async with websockets.connect('ws://127.0.0.1:8888/backend') as ws:
-            await ws.send("ConfigureTopology Connected.")
-            return ws
+    def create_websocket(self):
+        ws = create_connection("ws://127.0.0.1:8888/backend")
+            ws.send("ConfigureTopology Connected.")
 
     # def send_to_socket(self,message):
     #     self.ws.write_message(json.dumps({
