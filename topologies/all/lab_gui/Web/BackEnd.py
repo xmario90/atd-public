@@ -32,6 +32,8 @@ class BackEnd(tornado.websocket.WebSocketHandler):
         elif data['type'] == 'serverData':
             pass
         elif data['type'] == 'clientData':
+            print(type(data))
+            print(data)
             ConfigureTopology(selected_menu=data['selectedMenu'],selected_lab=data['selectedLab'])
 
 
