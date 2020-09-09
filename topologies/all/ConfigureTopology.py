@@ -39,7 +39,7 @@ class ConfigureTopology():
         self.selected_menu = selected_menu
         if socket != None:
             self.ws = socket
-            ws.name = 'Provided'
+            self.ws.name = 'Provided'
         else:
             self.ws = self.create_websocket()
         self.selected_lab = selected_lab
