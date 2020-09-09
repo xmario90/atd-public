@@ -97,7 +97,7 @@ class ConfigureTopology():
         self.deploy_lab()
         
     def connect_to_websocket(self):
-    ws = websockets.connect('ws://127.0.0.1:8888/backend'
+        ws = websockets.connect('ws://127.0.0.1:8888/backend'
         websocket.send("ConfigureTopology Connected.")
 
     # def send_to_socket(self,message):
