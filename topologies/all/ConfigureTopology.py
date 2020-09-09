@@ -96,9 +96,10 @@ class ConfigureTopology():
         self.ws = self.connect_to_websocket()
         self.deploy_lab()
         
-    def connect_to_websocket(self):
-        ws = websockets.connect('ws://127.0.0.1:8888/backend'
-        websocket.send("ConfigureTopology Connected.")
+    asybc def create_websocket(self):
+        async with websockets.connect('ws://127.0.0.1:8888/backend') as ws:
+            await ws.send("ConfigureTopology Connected.")
+            return ws
 
     # def send_to_socket(self,message):
     #     self.ws.write_message(json.dumps({
