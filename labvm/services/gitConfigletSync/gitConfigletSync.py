@@ -89,11 +89,15 @@ def main():
          else:
             res = cvp_clnt.impConfiglet("static",configletName,configletConfig)
             pS("INFO", "{0} Configlet: {1}".format(res[0],configletName))
+
    # Perform a check to see if there any pending tasks to be executed due to configlet update
    sleep(10)
    pS("INFO", "Performing check for pending tasks.")
    cvp_clnt.getAllTasks("pending")
-   if cvp_clnt.tasks['pending']:
+
+   # Iterate through pending tasks if any exist and then re-run the check afterwards to see
+   # if loop is able break.
+   while len(cvp_clnt.tasks['pending']) > 0:
       pS("INFO", "Pending tasks found, will execute")
       task_response = cvp_clnt.execAllTasks("pending")
       # Perform check to see if there are any existing tasks to be executed
@@ -112,8 +116,14 @@ def main():
                else:
                      pS("INFO", "Task ID: {0} Status: {1}, Waiting 10 seconds...".format(task_id, task_status))
                      sleep(10)
-   else:
-      pS("OK", "No pending tasks found")
+
+      # Rerun pending task check
+      sleep(10)
+      pS("INFO", "Re-performing check for pending tasks.")
+      cvp_clnt.getAllTasks("pending")   
+
+   # Send syslog message after loop finishes                  
+   pS("OK", "No pending tasks found")
 
 
    pS("OK", "Configlet sync complete")
