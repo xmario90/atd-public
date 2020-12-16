@@ -40,3 +40,15 @@ RUN apt-add-repository https://cli.github.com/packages
 RUN apt update && apt install -y gh
 
 USER $USERNAME
+
+USER $USERNAME
+# set home
+ENV HOME /home/$USERNAME
+
+ENV TERM xterm
+
+ENV SHELL /bin/zsh
+ENV ZSH=/home/$USERNAME/.oh-my-zsh
+
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+RUN rm /home/$USERNAME/.zshrc
