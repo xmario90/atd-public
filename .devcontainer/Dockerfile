@@ -10,7 +10,9 @@ RUN apt update && apt install -y sudo \
                                  zsh \
                                  zsh-syntax-highlighting \
                                  zsh-doc \
-                                 liquidprompt
+                                 less \
+                                 liquidprompt \
+                                 software-properties-common
 
 RUN apt -y dist-upgrade
 
@@ -30,6 +32,14 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 RUN pip install --upgrade pip
 RUN pip install dotbot docutils rstcheck sphinx sphinx-bootstrap-theme sphinx-autobuild rcvpapi ruamel.yaml Pyyaml lxml jsonrpclib ansible cvprac pyeapi pylint tornado apscheduler pymongo 
+
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+
+RUN apt-add-repository https://cli.github.com/packages
+
+RUN apt update && apt install -y gh
+
+USER $USERNAME
 
 USER $USERNAME
 # set home

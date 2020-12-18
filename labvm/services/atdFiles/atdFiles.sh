@@ -12,7 +12,7 @@ done
 TOPO=$(cat /etc/ACCESS_INFO.yaml | shyaml get-value topology)
 ARISTA_PWD=$(cat /etc/ACCESS_INFO.yaml | shyaml get-value login_info.jump_host.pw)
 
-# Get the current arista password:
+# Get the current vEOS arista password:
 for i in $(seq 1 $(cat /etc/ACCESS_INFO.yaml | shyaml get-length login_info.veos))
 do
 TMP=$((i-1))
@@ -22,47 +22,59 @@ then
     AR_LEN=$( echo -n $LAB_ARISTA_PWD | wc -m)
 fi
 done
+# Get the current CVP arista password:
+for i in $(seq 1 $(cat /etc/ACCESS_INFO.yaml | shyaml get-length login_info.cvp.shell))
+do
+TMP=$((i-1))
+if [ $( cat /etc/ACCESS_INFO.yaml | shyaml get-value login_info.cvp.shell.$TMP.user ) = "arista" ]
+then
+    CVP_ARISTA_PWD=$( cat /etc/ACCESS_INFO.yaml | shyaml get-value login_info.cvp.shell.$TMP.pw )
+fi
+done
+
 
 
 # Adding in temporary pip install/upgrade for rCVP API
-pip install rcvpapi
 pip install --upgrade rcvpapi
+pip3 install --upgrade rcvpapi
 
-# Add current Node.js repo
-curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
-
-# Install Python3-pip
-apt install python3-pip nodejs -y
-
-# Install python3 ruamel.yaml
+# Install python3 modules
 pip3 install --upgrade pip
-pip3 install ruamel.yaml bs4 tornado scp paramiko rcvpapi
 
 # Setup NPM and webssh2
-npm install forever -g
-git clone https://github.com/billchurch/webssh2.git /opt/webssh2
-cp /tmp/atd/topologies/all/webssh2-config.json /opt/webssh2/app/config.json
 sed -i "s/{REPLACE_ARISTA}/$LAB_ARISTA_PWD/g" /opt/webssh2/app/config.json
-npm --prefix /opt/webssh2/app install --production
-npm --prefix /opt/webssh2/app install forever
 forever start /opt/webssh2/app/index.js
 
 # Clean up previous stuff to make sure it's current
 rm -rf /var/www/html/atd/labguides/
 
 # Make sure login.py and ConfigureTopology.py is current
+mkdir /usr/local/bin/ConfigureTopology
+cp /tmp/atd/topologies/all/ConfigureTopology.py /usr/local/bin/ConfigureTopology/ConfigureTopology.py
+cp /tmp/atd/topologies/all/__init__.py /usr/local/bin/ConfigureTopology/__init__.py
 cp /tmp/atd/topologies/all/login.py /usr/local/bin/login.py
-cp /tmp/atd/topologies/all/ConfigureTopology.py /usr/local/bin/ConfigureTopology.py
 cp /tmp/atd/topologies/all/labUI.py /usr/local/bin/labUI.py
-chmod +x /usr/local/bin/ConfigureTopology.py
 chmod +x /usr/local/bin/labUI.py
 
-# Copy over new nginx config if it exists and restart service
-if [ ! -z '/tmp/atd/topologies/all/nginx.conf' ]
+# Perform check for newer jumphost
+if [ -f '/etc/nginx/certs/star_atd_arista_com.crt' ]
 then
+    echo "New Jumphost build..."
+    cp /tmp/atd/topologies/all/index.php /var/www/html/atd/index.php
+    chown www-data:www-data /var/www/html/atd/index.php
+    sed -i "s/{REPLACE_PWD}/$ARISTA_PWD/g" /var/www/html/atd/index.php
+    sed -i "s/{CVP_PWD}/$CVP_ARISTA_PWD/g" /var/www/html/atd/index.php
+    # Disable iptables port forward to CVP
+    iptables -t nat -D PREROUTING 1
+    cp /tmp/atd/topologies/all/ssl_nginx.conf /etc/nginx/sites-enabled/default
+else
+    echo "Old Jumphost build..."
     cp /tmp/atd/topologies/all/nginx.conf /etc/nginx/sites-enabled/default
-    systemctl restart nginx
 fi
+
+# Restart nginx
+echo "Restarting NGINX"
+systemctl restart nginx
 
 # Add files to arista home
 rsync -av /tmp/atd/topologies/$TOPO/files/ /home/arista
@@ -73,6 +85,10 @@ cp /home/arista/infra/user-mapping.xml /etc/guacamole/
 
 # Update file permissions in /home/arista
 chown -R arista:arista /home/arista
+
+# Update file permissions in /home/aristagui
+
+chown -R aristagui:aristagui /home/aristagui
 
 # Update all occurrences for the arista lab credentials
 
@@ -89,6 +105,7 @@ sed -i "s/{REPLACE_ARISTA}/$LAB_ARISTA_PWD/g" /tmp/atd/topologies/$TOPO/labguide
 
 # Update the Arista user password for connecting to the labvm
 sed -i "s/{REPLACE_PWD}/$ARISTA_PWD/g" /tmp/atd/topologies/$TOPO/labguides/source/*.rst
+
 
 # Perform check for module lab
 if [ ! -z "$(grep "app" /etc/ACCESS_INFO.yaml)" ] && [ -d "/home/arista/modules" ]
