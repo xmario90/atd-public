@@ -32,3 +32,12 @@ RUN pip install --upgrade pip
 RUN pip install dotbot docutils rstcheck sphinx sphinx-bootstrap-theme sphinx-autobuild rcvpapi ruamel.yaml Pyyaml lxml jsonrpclib ansible cvprac pyeapi pylint tornado apscheduler pymongo 
 
 USER $USERNAME
+# set home
+ENV HOME /home/$USERNAME
+
+ENV TERM xterm
+
+ENV SHELL /bin/zsh
+ENV ZSH=/home/$USERNAME/.oh-my-zsh
+
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
