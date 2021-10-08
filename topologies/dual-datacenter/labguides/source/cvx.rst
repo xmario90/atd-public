@@ -5,6 +5,7 @@ CVX
    :align: center
 
 .. note:: Did you know the CVX stands for CloudVision eXchange? CVX is simply a virtual instance of Arista's EOS known as vEOS. CVX can be run in Standalone mode (Single VM) or Multi-node (up to 3 VMs) cluster.
+.. note:: Hello world.
 
 1. Log into the **LabAccess** jumpserver:
 
