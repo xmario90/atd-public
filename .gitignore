@@ -1,3 +1,4 @@
 .DS_Store
 .vscode
 atd-public.code-workspace
+presenter/atd-intro/themes/*

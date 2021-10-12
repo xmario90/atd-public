@@ -1,0 +1,6 @@
+[submodule "presenter/themes/reveal-hugo"]
+	path = presenter/themes/reveal-hugo
+	url = git@github.com:dzello/reveal-hugo.git
+[submodule "presenter/IATD-intro/themes/reveal-hugo"]
+	path = presenter/IATD-intro/themes/reveal-hugo
+	url = git@github.com:dzello/reveal-hugo.git

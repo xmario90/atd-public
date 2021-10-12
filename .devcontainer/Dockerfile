@@ -12,7 +12,8 @@ RUN apt update && apt install -y sudo \
                                  zsh-doc \
                                  less \
                                  liquidprompt \
-                                 software-properties-common
+                                 software-properties-common \
+                                 hugo
 
 RUN apt -y dist-upgrade
 
