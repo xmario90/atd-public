@@ -15,7 +15,7 @@ SSH to the public address assigned to the LabAccess jumphost server (this is the
 You will be greeted with the following menu:
 
 
-.. image:: images/program_connecting/nested_connecting_2.png
+.. thumbnail:: images/program_connecting/nested_connecting_2.png
    :align: center
 
 |
@@ -30,13 +30,13 @@ information (a URL) from your friendly Arista SE already. If you have not, pleas
 Once you receive your token, click on the link. You will greeted with a
 screen that looks like this:
 
-.. image:: images/program_connecting/nested_connecting_landing_1.png
+.. thumbnail:: images/program_connecting/nested_connecting_landing_1.png
    :align: center
 |
 For these labs, we will be leveraging the **Console Access**, **Programmability IDE** and **WebUI** services. Connect to each of the service by clicking on the corresponding links on the left side.
 Each service will open in a new tab in your browser.
 
-.. image:: images/program_connecting/nested_connecting_overview_1.png
+.. thumbnail:: images/program_connecting/nested_connecting_overview_1.png
    :align: center
 |
 To access each of the services, the credentials are listed on the **Arista Test Drive Lab** overview page in the **Usernames and Passwords** section.
